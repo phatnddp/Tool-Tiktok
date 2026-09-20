@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 250" width="240" height="250" fill="none">
+  <g transform="translate(-10, -5)">
+    <path d="M 184 36
+             L 184 130
+             C 184 85 148 64 112 64
+             C 68 64 38 94 38 138
+             C 38 182 70 214 112 214
+             C 136 214 158 202 172 184
+             L 186 200"
+          stroke="#d81e3a"
+          stroke-width="32"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+    <path d="M 102 168
+             C 90 156 90 136 104 122
+             C 118 108 140 110 154 124
+             L 182 154"
+          stroke="#d81e3a"
+          stroke-width="30"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+  </g>
+</svg>

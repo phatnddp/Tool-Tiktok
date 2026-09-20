@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" width="320" height="360" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800;900&amp;display=swap');
+      .dp-title {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        font-weight: 900;
+        font-size: 38px;
+        fill: #d81e3a;
+        letter-spacing: 2px;
+      }
+      .dp-sub {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        font-weight: 500;
+        font-size: 20px;
+        fill: #4b5563;
+        letter-spacing: 0.5px;
+      }
+    </style>
+  </defs>
+
+  <!-- Dung Phat Monogram Emblem -->
+  <g transform="translate(10, 5)">
+    <!-- Main Ribbon Stroke -->
+    <path d="M 194 36
+             L 194 130
+             C 194 85 158 64 122 64
+             C 78 64 48 94 48 138
+             C 48 182 80 214 122 214
+             C 146 214 168 202 182 184
+             L 196 200"
+          stroke="#d81e3a"
+          stroke-width="34"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+    <!-- Inner dynamic hook -->
+    <path d="M 112 168
+             C 100 156 100 136 114 122
+             C 128 108 150 110 164 124
+             L 192 154"
+          stroke="#d81e3a"
+          stroke-width="32"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <text x="160" y="306" text-anchor="middle" class="dp-title">DUNG PHÁT</text>
+  <text x="160" y="342" text-anchor="middle" class="dp-sub">Tròn vị hạnh phúc</text>
+</svg>
