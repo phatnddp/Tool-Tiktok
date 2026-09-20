@@ -1,0 +1,3442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dung Phát Tool - Tính Toán Chi Phí TikTok Shop & Shopee</title>
+<meta name="description" content="Công cụ toàn diện tính toán chi phí, phân tích đơn hàng, GMV MAX, ROI hoàn huỷ và báo cáo tài chính cho nhà bán hàng TikTok Shop & Shopee.">
+<meta name="keywords" content="tính toán chi phí TikTok Shop, phí hoa hồng TikTok Shop, tính giá bán TikTok, lợi nhuận TikTok Shop, hòa vốn TikTok Shop, công cụ bán hàng TikTok, Shopee, Dung Phát, tăng trưởng đa sàn">
+<meta name="author" content="Dung Phát">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.hadaplustool.vn/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.hadaplustool.vn/">
+<meta property="og:title" content="Dung Phát Tool - Tính Toán Chi Phí TikTok Shop & Shopee">
+<meta property="og:description" content="Công cụ toàn diện tính toán chi phí, phân tích đơn hàng, GMV MAX, ROI hoàn huỷ và báo cáo tài chính cho nhà bán hàng TikTok Shop & Shopee.">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:site_name" content="Dung Phát Tool">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="google-site-verification" content="google36ddb39985448890">
+
+<!-- ═══════════════════════════════════════════════
+     AUTH GUARD (Supabase) — chặn nếu chưa login/duyệt
+     ═══════════════════════════════════════════════ -->
+<style>
+#auth-guard-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: linear-gradient(135deg, #18181b 0%, #450a0a 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+#auth-guard-overlay .box {
+  background: #fff; border-radius: 20px; padding: 40px;
+  text-align: center; max-width: 360px; width: 100%;
+  box-shadow: 0 25px 60px rgba(0,0,0,.4);
+}
+#auth-guard-overlay .logo { font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg,#dc2626,#991b1b);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+#auth-guard-overlay p { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+#auth-guard-overlay .spinner {
+  width: 36px; height: 36px; border: 3px solid #e2e8f0;
+  border-top-color: #dc2626; border-radius: 50%;
+  animation: ag-spin .8s linear infinite; margin: 12px auto 0;
+}
+@keyframes ag-spin { to { transform: rotate(360deg); } }
+#auth-guard-overlay .btn-go {
+  display: inline-block; padding: 12px 28px; background: linear-gradient(135deg,#dc2626,#991b1b);
+  color: #fff; border-radius: 10px; font-weight: 700; font-size: 15px;
+  text-decoration: none; cursor: pointer; border: none; font-family: inherit; width: 100%;
+}
+#auth-guard-overlay .pending-icon { font-size: 40px; margin-bottom: 8px; }
+#auth-guard-overlay h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #1e293b; }
+/* Nút đăng xuất — đồng bộ với sidebar */
+/* Thanh tài khoản góc dưới trái: chỉ 220px nên không nhét vừa email + hạn dùng
+   + nút đăng xuất cùng hàng. Gom lại thành 1 nút, bấm vào mở menu đầy đủ. */
+#user-bar {
+  display: none; position: fixed; bottom: 0; left: 0; z-index: 9998;
+  width: var(--sidebar-w); box-sizing: border-box;
+  /* Nền trắng trùng màu menu + viền phải trùng viền menu -> nhìn như phần
+     chân của menu, không phải một dải rời nổi đè lên. */
+  background: #fff;
+  border-top: 1px solid #e8edf3;
+  border-right: 1.5px solid var(--border);
+  box-shadow: 0 -6px 14px rgba(15,23,42,.05);
+  padding: 8px 10px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+#ub-trigger {
+  display: flex; align-items: center; gap: 9px; width: 100%; box-sizing: border-box;
+  padding: 7px 8px; border: 1px solid transparent; border-radius: 10px;
+  background: transparent; cursor: pointer; font-family: inherit; text-align: left;
+  transition: background .15s, border-color .15s;
+}
+#ub-trigger:hover { background: #fff; border-color: #dbe3ec; }
+#ub-trigger.open { background: #fff; border-color: #bfdbfe; }
+.ub-avatar {
+  width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+  background: linear-gradient(135deg,#dc2626,#991b1b); color: #fff;
+  font-size: 13px; font-weight: 800; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center;
+}
+.ub-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+#ub-email { font-size: 11.5px; font-weight: 600; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#ub-expiry { font-size: 10px; font-weight: 700; color: #16a34a; white-space: nowrap; }
+#ub-expiry.warn { color: #b45309; }
+#ub-expiry.danger { color: #dc2626; }
+.ub-caret { font-size: 9px; color: #94a3b8; flex-shrink: 0; transition: transform .18s; }
+#ub-trigger.open .ub-caret { transform: rotate(180deg); }
+
+#ub-menu {
+  display: none; position: fixed; bottom: 58px; left: 10px; width: 252px;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 13px;
+  box-shadow: 0 12px 34px rgba(15,23,42,.16); overflow: hidden; z-index: 9999;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+#ub-menu.show { display: block; animation: ubHien .14s ease-out; }
+@keyframes ubHien { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.ub-head { padding: 13px 14px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 10px; align-items: flex-start; }
+.ub-head .ub-avatar { width: 34px; height: 34px; border-radius: 10px; font-size: 14px; }
+.ub-head-email { font-size: 11.5px; font-weight: 700; color: #1e293b; word-break: break-all; line-height: 1.5; }
+.ub-role { display: inline-block; margin: 4px 4px 0 0; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+.ub-role.ad { background: #fef3c7; color: #92400e; }
+.ub-role.vv { background: #ede9fe; color: #6d28d9; }
+.ub-han { padding: 11px 14px; border-bottom: 1px solid #f1f5f9; }
+.ub-han-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.ub-han-lbl { font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .4px; }
+.ub-han-con { font-size: 10.5px; font-weight: 800; }
+.ub-han-ngay { font-size: 14px; font-weight: 800; color: #1e293b; margin-top: 3px; }
+.ub-thanh { height: 5px; border-radius: 20px; background: #e2e8f0; margin-top: 8px; overflow: hidden; }
+.ub-thanh > i { display: block; height: 100%; border-radius: 20px; }
+.ub-item {
+  display: flex; align-items: center; gap: 9px; width: 100%; box-sizing: border-box;
+  padding: 10px 14px; border: none; background: none; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; font-weight: 600; color: #334155; text-align: left;
+}
+.ub-item:hover { background: #fef2f2; }
+.ub-item.pri { color: #dc2626; }
+.ub-item.dan { color: #dc2626; }
+.ub-item .ic { font-size: 13px; width: 17px; text-align: center; flex-shrink: 0; }
+.ub-vach { height: 1px; background: #f1f5f9; }
+</style>
+
+<!-- Auth overlay (shown while checking / if not authorized) -->
+<div id="auth-guard-overlay">
+  <div class="box">
+    <div class="logo">⚡ Dung Phát Tool</div>
+    <p>Đang kiểm tra quyền truy cập...</p>
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<!-- User info bar (shown after login) -->
+<div id="user-bar">
+  <button id="ub-trigger" type="button" onclick="ubMo(event)">
+    <span class="ub-avatar" id="ub-avatar"></span>
+    <span class="ub-info"><span id="ub-email"></span><span id="ub-expiry"></span></span>
+    <span class="ub-caret">▼</span>
+  </button>
+</div>
+<div id="ub-menu"></div>
+
+
+
+
+<!-- ═══════════════════════════════════════════════
+     MÀN HÌNH GIA HẠN — thanh toán chuyển khoản qua SePay
+     ═══════════════════════════════════════════════ -->
+<style>
+#gh-overlay {
+  position: fixed; inset: 0; z-index: 100000; display: none;
+  background: rgba(15,23,42,.72); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center; padding: 20px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+#gh-overlay.show { display: flex; }
+#gh-box {
+  background: #fff; border-radius: 18px; width: 100%; max-width: 560px;
+  max-height: 92vh; overflow: auto; box-shadow: 0 25px 70px rgba(0,0,0,.45);
+}
+#gh-head {
+  padding: 20px 24px 16px; border-bottom: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+}
+#gh-head h3 { font-size: 17px; font-weight: 800; color: #1e293b; margin: 0 0 4px; }
+#gh-head p { font-size: 12.5px; color: #64748b; margin: 0; line-height: 1.6; }
+#gh-close {
+  background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 8px;
+  font-size: 17px; color: #64748b; cursor: pointer; flex-shrink: 0; line-height: 1;
+}
+#gh-close:hover { background: #e2e8f0; }
+#gh-body { padding: 20px 24px 24px; }
+
+.gh-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.gh-plan {
+  border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px 16px;
+  cursor: pointer; text-align: left; background: #fff; font-family: inherit;
+  transition: all .15s; position: relative;
+}
+.gh-plan:hover { border-color: #dc2626; background: #f8fafc; }
+.gh-plan.best { border-color: #f59e0b; background: linear-gradient(135deg,#fffbeb,#fef3c7); }
+.gh-plan.best:hover { border-color: #d97706; }
+.gh-plan .m { font-size: 13px; font-weight: 700; color: #334155; }
+.gh-plan .p { font-size: 19px; font-weight: 800; color: #1e293b; margin: 5px 0 2px; }
+.gh-plan .pm { font-size: 11.5px; color: #64748b; }
+.gh-plan .tag {
+  position: absolute; top: -9px; right: 10px; background: #f59e0b; color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+}
+
+#gh-qrwrap { text-align: center; }
+#gh-qrimg {
+  width: 240px; height: 240px; border: 1px solid #e2e8f0; border-radius: 12px;
+  background: #f8fafc; display: block; margin: 0 auto 14px;
+}
+.gh-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 9px 14px; background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 9px; margin-bottom: 8px; text-align: left;
+}
+.gh-row .k { font-size: 11.5px; color: #64748b; font-weight: 600; flex-shrink: 0; }
+.gh-row .v {
+  font-size: 14px; font-weight: 800; color: #1e293b;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.gh-copy {
+  background: #2563eb; color: #fff; border: none; border-radius: 7px;
+  padding: 5px 11px; font-size: 11px; font-weight: 700; cursor: pointer;
+  font-family: inherit; flex-shrink: 0;
+}
+.gh-copy:hover { background: #b91c1c; }
+#gh-status {
+  margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px;
+  background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;
+  display: flex; align-items: center; gap: 10px; text-align: left;
+}
+#gh-status .dot {
+  width: 15px; height: 15px; border: 2px solid #bfdbfe; border-top-color: #dc2626;
+  border-radius: 50%; animation: ag-spin .8s linear infinite; flex-shrink: 0;
+}
+.gh-note { font-size: 11.5px; color: #64748b; line-height: 1.75; margin-top: 12px; text-align: left; }
+.gh-back {
+  background: none; border: none; color: #2563eb; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; font-family: inherit; padding: 0; margin-top: 12px;
+}
+#gh-done { text-align: center; padding: 12px 0; }
+#gh-done .ic { font-size: 52px; }
+#gh-done h4 { font-size: 19px; font-weight: 800; color: #16a34a; margin: 8px 0 6px; }
+#gh-done p { font-size: 13.5px; color: #475569; margin: 0 0 18px; line-height: 1.7; }
+.gh-btn {
+  display: inline-block; padding: 12px 28px; background: linear-gradient(135deg,#dc2626,#991b1b);
+  color: #fff; border-radius: 10px; font-weight: 700; font-size: 14.5px;
+  border: none; cursor: pointer; font-family: inherit; width: 100%;
+}
+#ub-expiry {
+  font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+  background: #fee2e2; color: #b91c1c; white-space: nowrap; cursor: pointer;
+}
+#ub-expiry.warn { background: #fef3c7; color: #b45309; }
+#ub-expiry.danger { background: #fee2e2; color: #b91c1c; }
+@media (max-width: 520px) { .gh-plans { grid-template-columns: 1fr; } }
+</style>
+
+<div id="gh-overlay" onclick="if(event.target===this)ghClose()">
+  <div id="gh-box">
+    <div id="gh-head">
+      <div>
+        <h3>💳 Gia hạn tài khoản</h3>
+        <p id="gh-sub">Chọn gói bên dưới để tiếp tục sử dụng công cụ.</p>
+      </div>
+      <button id="gh-close" onclick="ghClose()" title="Đóng">&times;</button>
+    </div>
+    <div id="gh-body"></div>
+  </div>
+</div>
+
+
+
+<!-- ═══════════════ ĐỔI MẬT KHẨU ═══════════════ -->
+<style>
+#mk-overlay {
+  position: fixed; inset: 0; z-index: 100001; display: none;
+  background: rgba(15,23,42,.72); align-items: center; justify-content: center; padding: 20px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+#mk-overlay.show { display: flex; }
+#mk-box {
+  background: #fff; border-radius: 16px; width: 100%; max-width: 400px;
+  max-height: 92vh; overflow: auto; box-shadow: 0 25px 70px rgba(0,0,0,.45);
+}
+#mk-head { padding: 18px 22px 14px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+#mk-head h3 { font-size: 16px; font-weight: 800; color: #1e293b; margin: 0 0 4px; }
+#mk-head p { font-size: 12px; color: #64748b; margin: 0; line-height: 1.55; word-break: break-all; }
+#mk-close { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 8px; font-size: 16px; color: #64748b; cursor: pointer; flex-shrink: 0; line-height: 1; }
+#mk-close:hover { background: #e2e8f0; }
+#mk-body { padding: 18px 22px 22px; }
+.mk-o { margin-bottom: 13px; }
+.mk-o label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px; }
+.mk-o input {
+  width: 100%; box-sizing: border-box; padding: 10px 12px;
+  border: 1.5px solid #d1d5db; border-radius: 9px; font-size: 14px; font-family: inherit;
+}
+.mk-o input:focus { outline: none; border-color: #dc2626; }
+.mk-hien { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #475569; margin: -3px 0 14px; cursor: pointer; }
+#mk-loi { display: none; margin-bottom: 13px; padding: 10px 13px; border-radius: 9px; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 12.5px; line-height: 1.6; }
+.mk-btn { display: block; width: 100%; padding: 12px; background: linear-gradient(135deg,#dc2626,#991b1b); color: #fff; border: none; border-radius: 10px; font-family: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer; }
+.mk-btn[disabled] { opacity: .6; cursor: default; }
+.mk-note { font-size: 11.5px; color: #64748b; line-height: 1.7; margin-top: 12px; }
+#mk-xong { text-align: center; padding: 10px 0; }
+#mk-xong .ic { font-size: 48px; }
+#mk-xong h4 { font-size: 18px; font-weight: 800; color: #16a34a; margin: 8px 0 6px; }
+#mk-xong p { font-size: 13px; color: #475569; margin: 0 0 18px; line-height: 1.7; }
+</style>
+
+<div id="mk-overlay" onclick="if(event.target===this)mkDong()">
+  <div id="mk-box">
+    <div id="mk-head">
+      <div><h3>🔑 Đổi mật khẩu</h3><p id="mk-sub"></p></div>
+      <button id="mk-close" type="button" onclick="mkDong()" title="Đóng">&times;</button>
+    </div>
+    <div id="mk-body"></div>
+  </div>
+</div>
+
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<link rel="preconnect" href="https://qotrwydgsnpqzvausldc.supabase.co" crossorigin>
+<link rel="preconnect" href="https://qr.sepay.vn">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-page: #f0f4f8;
+  --bg-card: #ffffff;
+  --bg-input: #f7f9fc;
+  --bg-hover: #f0f6ff;
+  --text-primary: #1a2332;
+  --text-secondary: #5a6a7e;
+  --text-muted: #8896a6;
+  --blue: #dc2626;
+  --blue-dark: #b91c1c;
+  --blue-light: #fee2e2;
+  --blue-bg: #fef2f2;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --red-bg: #fef2f2;
+  --yellow: #d97706;
+  --yellow-light: #fef3c7;
+  --yellow-bg: #fffbeb;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --green-bg: #f0fdf4;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+  --header-h: 72px;
+  --sidebar-w: 220px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+* {
+  font-family: 'Be Vietnam Pro', sans-serif !important;
+}
+body {
+  font-family: 'Be Vietnam Pro', sans-serif !important;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-top: var(--header-h);
+  padding-left: var(--sidebar-w);
+}
+
+/* ===== FIXED HEADER ===== */
+.app-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 45%, #dc2626 100%);
+  box-shadow: 0 2px 18px rgba(185,28,28,0.32);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 0;
+}
+.app-header::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -5%;
+  width: 280px;
+  height: 280px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 10px;
+  padding: 9px 18px 9px 14px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.logo-wrap:hover { background: rgba(255,255,255,0.2); }
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg,#fff 0%,#dbeafe 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  flex-shrink: 0;
+}
+.logo-text-block { line-height: 1.15; }
+.logo-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.38em;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.logo-name .hada { color: #fff; }
+.logo-name .plus { color: #fbbf24; }
+.logo-sub {
+  font-size: 0.6em;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.header-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+  margin: 0 18px;
+  flex-shrink: 0;
+}
+
+.header-info { display: flex; flex-direction: column; gap: 3px; }
+.header-tagline {
+  font-size: 0.82em;
+  color: rgba(255,255,255,0.88);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.header-hotline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78em;
+  font-weight: 700;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.hotline-dot {
+  width: 7px; height: 7px;
+  background: #fbbf24;
+  border-radius: 50%;
+  animation: pulse-dot 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse-dot {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.7)}
+}
+
+.header-title-block {
+  flex: 1;
+  text-align: center;
+  padding: 0 20px;
+}
+.header-title-block h1 {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.header-title-block p {
+  font-size: 0.78em;
+  color: rgba(255,255,255,0.75);
+  margin-top: 1px;
+}
+
+/* ===== VERTICAL SIDEBAR ===== */
+.app-navbar {
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  background: #fff;
+  border-right: 1.5px solid var(--border);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.05);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  /* Chừa 64px dưới đáy đúng bằng chiều cao thanh tài khoản (nó nổi đè lên
+     menu), nếu không mục cuối cùng bị che mất một nửa. */
+  padding: 16px 10px 76px;
+  gap: 4px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.app-navbar::-webkit-scrollbar { display: none; }
+
+/* Sidebar section label */
+.nav-section-label {
+  font-size: 0.68em;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 10px 4px;
+  margin-top: 4px;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  font-size: 0.875em;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  position: relative;
+  white-space: nowrap;
+  transition: all 0.18s;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  width: 100%;
+  border-left: 3px solid transparent;
+}
+.nav-tab:hover { color: var(--blue); background: var(--blue-bg); }
+.nav-tab.active {
+  color: var(--blue);
+  background: var(--blue-bg);
+  border-left-color: var(--blue);
+  font-weight: 700;
+}
+.nav-tab .tab-icon { font-size: 1.15em; flex-shrink: 0; }
+.nav-tab .tab-label { flex: 1; }
+.nav-tab .tab-badge {
+  background: #e0e7ff;
+  color: var(--blue);
+  font-size: 0.6em;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.nav-tab.coming { opacity: 0.6; cursor: not-allowed; position: relative; }
+
+/* Sub-tab navigation */
+.nav-sub-group {
+  display: none;
+  flex-direction: column;
+  padding: 2px 0 2px 28px;
+  margin: -2px 0 4px 0;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 20px;
+  gap: 1px;
+}
+.nav-sub-group.show { display: flex; }
+.nav-sub-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  font-size: 0.78em;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  text-align: left;
+  font-weight: 500;
+}
+.nav-sub-tab::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.nav-sub-tab:hover { color: var(--blue); }
+.nav-sub-tab:hover::before { background: var(--blue); }
+.nav-sub-tab.active { color: var(--blue); font-weight: 700; }
+.nav-sub-tab.active::before { background: var(--blue); box-shadow: 0 0 0 3px rgba(220,38,38,0.15); }
+.nav-sub-tab.coming { opacity: 0.45; cursor: not-allowed; }
+.nav-sub-tab.coming:hover { color: #64748b; }
+.nav-sub-tab.coming:hover::before { background: #cbd5e1; }
+
+.nav-tab.coming:hover { background: rgba(30,40,107,0.9); color: #fff; opacity: 1; }
+.nav-tab.coming:hover .tab-icon,
+.nav-tab.coming:hover .tab-label { opacity: 0; }
+.nav-tab.coming:hover::after {
+  content: '🔒 Sắp ra mắt';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78em;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(30,40,107,0.92);
+  border-radius: var(--radius-sm);
+  z-index: 10;
+}
+
+/* ===== MAIN CONTENT ===== */
+.page-content { display: none; }
+.page-content.active { display: block; }
+
+.content-wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow); }
+.card-title {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--blue-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .icon { font-size: 1.1em; }
+
+/* ===== GRIDS ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* ===== FORM ===== */
+.form-group { margin-bottom: 13px; }
+.form-group label {
+  display: block;
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 9px 13px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.92em;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+  background: #fff;
+}
+.form-group input::placeholder { color: var(--text-muted); }
+.form-group .unit { font-size: 0.76em; color: var(--text-muted); }
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 9px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.88em;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220,38,38,0.28); }
+.btn-secondary { background: #fff; color: var(--text-secondary); border: 1.5px solid var(--border); }
+.btn-secondary:hover { background: var(--bg-input); border-color: var(--blue); color: var(--blue); }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-success { background: var(--green); color: #fff; }
+.btn-success:hover { background: #15803d; }
+.btn-sm { padding: 6px 13px; font-size: 0.8em; }
+.actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+/* ===== RESULT BOXES ===== */
+.result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin-top: 16px; }
+body.che-do-cty #page-tinh-gia #resultGrid,
+body.che-do-cty #page-tinh-gia #refAnalysis { display: none !important; }
+.ct-ph { margin-top: 14px; padding: 13px 15px; border: 1.5px solid var(--border);
+         border-radius: 11px; background: var(--bg-page); font-size: 12.5px; line-height: 1.85; }
+.ct-ph h5 { margin: 12px 0 4px; font-size: 12.5px; font-weight: 800; color: var(--text-primary); }
+.ct-ph h5:first-child { margin-top: 0; }
+.ct-ph .d { padding-left: 12px; color: var(--text-muted); }
+.ct-ph .ok { color: #16a34a; font-weight: 700; }
+.ct-ph .ct-b { margin: 11px 0 2px; font-weight: 800; color: var(--text-primary); }
+.ct-ph .ct-b:first-child { margin-top: 0; }
+.ct-ph .ct-n { font-weight: 500; color: var(--text-muted); font-size: 11.5px; }
+.ct-ph .ct-f { color: var(--blue); font-weight: 600; }
+.ct-ph .ct-i { margin: 5px 0 9px; padding: 8px 11px; border-left: 3px solid var(--border);
+               background: var(--bg-card); border-radius: 0 8px 8px 0; }
+.ct-ph i { color: var(--text-muted); font-style: normal; font-size: 11.5px; display: block; margin-top: 2px; }
+.ct-ph .no { color: #dc2626; font-weight: 700; }
+.ct-ph .cn { color: #b45309; font-weight: 700; }
+.ct-ph b { color: var(--text-primary); }
+.cty-hd { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px;
+           border: 1.5px solid var(--border); border-radius: 9px; background: var(--bg-card); }
+.cty-hd label { font-size: 12px; font-weight: 700; color: var(--text-primary); cursor: pointer; }
+.cty-hd select { width: 100%; padding: 5px 7px; font-size: 12px; font-family: inherit;
+                 border: 1.5px solid var(--border); border-radius: 7px; background: var(--bg-input);
+                 color: var(--text-primary); cursor: pointer; }
+.cty-hd.ct    { background: #fffbeb; border-color: #fcd34d; }
+.cty-hd.khong { background: #fef2f2; border-color: #fca5a5; }
+.cty-hd.khong label { color: #b91c1c; }
+.result-box {
+  padding: 14px;
+  border-radius: var(--radius);
+  text-align: center;
+  border: 1.5px solid var(--border);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.result-box:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.result-box.breakeven { background: var(--yellow-bg); border-color: #fbbf24; }
+.result-box.profit { background: var(--green-bg); border-color: #86efac; }
+.result-box.info { background: var(--blue-bg); border-color: #93c5fd; }
+.result-box .label { font-size: 0.76em; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+.result-box .value { font-size: 1.32em; font-weight: 700; }
+.result-box.breakeven .value { color: var(--yellow); }
+.result-box.profit .value { color: var(--green); }
+.result-box.info .value { color: var(--blue); }
+.result-box .sub { font-size: 0.73em; color: var(--text-muted); margin-top: 3px; }
+
+/* ===== TABLE ===== */
+.table-wrapper { overflow-x: auto; margin-top: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+thead th {
+  background: var(--blue);
+  color: #fff;
+  padding: 11px 10px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.83em;
+}
+thead th:first-child { border-radius: 7px 0 0 0; }
+thead th:last-child { border-radius: 0 7px 0 0; }
+tbody td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody tr:hover { background: var(--bg-hover); }
+tbody tr:nth-child(even) { background: #fafbfd; }
+tbody tr:nth-child(even):hover { background: var(--bg-hover); }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-green { color: var(--green); font-weight: 600; }
+.text-yellow { color: var(--yellow); font-weight: 600; }
+.text-red { color: var(--red); font-weight: 600; }
+
+/* GMV MAX table styling */
+.gmv-table .col-action select { font-size: 0.95em !important; padding: 5px 6px !important; }
+.gmv-table .col-note input { font-size: 0.95em !important; padding: 5px 6px !important; }
+.gmv-table .col-id { font-family: 'Consolas','Monaco',monospace; word-break: break-all; font-size: 0.95em; }
+.gmv-table .col-num { text-align: right; }
+.gmv-table .col-roi { text-align: right; font-weight: 700; }
+.gmv-table .col-pct { text-align: right; }
+.gmv-table .col-ctr { text-align: right; white-space: nowrap; }
+.gmv-table .col-cancel { text-align: right; font-weight: 700; }
+.gmv-table .col-dl { min-width: 260px; line-height: 1.5; }
+.gmv-copy-btn { display: inline-block; margin-top: 3px; padding: 1px 6px; font-size: 0.78em; color: #2563eb; cursor: pointer; border: 1px solid #93c5fd; border-radius: 4px; background: #eff6ff; }
+.gmv-copy-btn:hover { background: #dbeafe; color: #1d4ed8; }
+
+/* ===== FEE SUMMARY ===== */
+.fee-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 16px;
+  background: var(--blue-bg);
+  border: 1.5px solid var(--blue-light);
+  border-radius: var(--radius-sm);
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.fee-summary .fee-item { font-size: 0.85em; color: var(--text-secondary); }
+.fee-summary .fee-item span { color: var(--blue); font-weight: 700; }
+
+/* ===== SELLER TOGGLE ===== */
+.seller-toggle {
+  display: flex;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  width: fit-content;
+}
+.seller-toggle button {
+  padding: 8px 20px;
+  border: none;
+  background: #fff;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.86em;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.seller-toggle button:first-child { border-right: 1.5px solid var(--border); }
+.seller-toggle button.active { background: var(--blue); color: #fff; }
+.seller-toggle button:hover:not(.active) { background: var(--blue-bg); color: var(--blue); }
+
+/* ===== MARGIN INPUTS ===== */
+.margin-inputs { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.margin-inputs input {
+  width: 64px;
+  padding: 7px 9px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+  font-family: inherit;
+  text-align: center;
+}
+.margin-inputs input:focus { outline: none; border-color: var(--blue); }
+.margin-inputs span { color: var(--text-secondary); font-size: 0.84em; font-weight: 500; }
+
+/* ===== COST ROWS ===== */
+.cost-rows { display: grid; gap: 9px; margin-top: 10px; }
+.cost-row {
+  display: grid;
+  grid-template-columns: minmax(170px,1.4fr) minmax(130px,1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+.cost-row input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+  font-family: inherit;
+}
+.cost-row input:focus { outline: none; border-color: var(--blue); }
+.cost-row-remove {
+  height: 40px;
+  min-width: 40px;
+  border: 1.5px solid #fecaca;
+  background: #fff;
+  color: var(--red);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+.cost-row-remove:hover { background: var(--red-bg); }
+.cost-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+/* ===== SEARCH AUTOCOMPLETE ===== */
+.search-wrapper { position: relative; }
+.search-wrapper input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.92em;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.search-wrapper input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); background: #fff; }
+.search-icon {
+  position: absolute;
+  left: 13px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-icon svg { width: 17px; height: 17px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.search-clear {
+  position: absolute;
+  right: 9px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--text-muted);
+  cursor: pointer; font-size: 1.1em;
+  padding: 3px 5px; border-radius: 4px;
+  display: none;
+}
+.search-clear:hover { color: var(--red); background: var(--red-light); }
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  box-shadow: var(--shadow-lg);
+}
+.autocomplete-dropdown.show { display: block; }
+.ac-item {
+  padding: 9px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.active { background: var(--blue-bg); }
+.ac-item-path { font-size: 0.83em; color: var(--text-secondary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-item-path .highlight { color: var(--blue); font-weight: 700; background: var(--blue-light); border-radius: 2px; padding: 0 2px; }
+.ac-item-rate { font-size: 0.8em; font-weight: 700; color: var(--blue); white-space: nowrap; padding: 3px 9px; background: var(--blue-light); border-radius: 20px; }
+.ac-group-label {
+  padding: 7px 15px;
+  font-size: 0.7em;
+  color: var(--blue);
+  background: var(--blue-bg);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  position: sticky; top: 0;
+  border-bottom: 1px solid var(--blue-light);
+}
+.ac-hint { padding: 14px; color: var(--text-muted); font-size: 0.83em; text-align: center; }
+.selected-category {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 13px;
+  background: var(--blue-bg);
+  border: 1.5px solid var(--blue);
+  border-radius: var(--radius-sm);
+  margin-top: 9px;
+}
+.selected-category .cat-path { flex: 1; font-size: 0.86em; color: var(--text-primary); }
+.selected-category .cat-path span { color: var(--text-muted); }
+.selected-category .cat-rate { font-weight: 700; color: var(--blue); background: var(--blue-light); padding: 3px 11px; border-radius: 20px; }
+.selected-category .cat-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1em; padding: 2px 6px; border-radius: 4px; }
+.selected-category .cat-remove:hover { color: var(--red); background: var(--red-light); }
+
+/* ===== COMMISSION DISPLAY ===== */
+.commission-display {
+  padding: 9px 13px;
+  background: var(--yellow-bg);
+  border: 1.5px solid #fbbf24;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  color: var(--yellow);
+  font-size: 1.05em;
+  text-align: center;
+}
+
+/* ===== REF ANALYSIS ===== */
+.ref-analysis {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88em;
+}
+.ref-analysis.positive { background: var(--green-bg); border: 1.5px solid #86efac; }
+.ref-analysis.negative { background: var(--red-bg); border: 1.5px solid #fca5a5; }
+.ref-analysis-title { font-weight: 600; margin-bottom: 5px; }
+.ref-analysis.positive .ref-analysis-title { color: var(--green); }
+.ref-analysis.negative .ref-analysis-title { color: var(--red); }
+
+/* ===== COLLAPSIBLE ===== */
+.collapsible-header { cursor: pointer; user-select: none; }
+.collapsible-header::after { content: ' [Thu gọn]'; font-size: 0.7em; color: var(--text-muted); font-weight: 400; }
+.collapsible-header.collapsed::after { content: ' [Mở rộng]'; }
+
+/* ===== EMPTY STATE ===== */
+.empty-state { text-align: center; padding: 44px 20px; color: var(--text-muted); }
+.empty-state-icon { font-size: 2.4em; margin-bottom: 9px; opacity: 0.4; }
+
+/* ===== COMING SOON PAGE ===== */
+.coming-soon-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px;
+}
+.coming-soon-icon { font-size: 4em; margin-bottom: 20px; opacity: 0.35; }
+.coming-soon-title { font-size: 1.6em; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; }
+.coming-soon-desc { font-size: 0.95em; color: var(--text-muted); max-width: 400px; }
+.coming-soon-badge {
+  display: inline-block;
+  margin-top: 16px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 0.82em;
+  padding: 6px 18px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* ===== FOOTER ===== */
+.app-footer {
+  text-align: center;
+  padding: 18px;
+  color: var(--text-muted);
+  font-size: 0.78em;
+  margin-top: 8px;
+}
+
+/* ===== FILE INPUT ===== */
+.file-input {
+  width: 100%;
+  padding: 8px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.88em;
+  color: var(--text-secondary);
+  transition: border-color 0.2s;
+}
+.file-input:hover { border-color: var(--blue); }
+.file-hint {
+  font-size: 0.76em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.file-hint.loaded { color: var(--green); font-weight: 600; }
+
+/* ===== STAT KPI CARDS ===== */
+.stat-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.stat-kpi {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.stat-kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat-kpi-icon { font-size: 1.8em; flex-shrink: 0; }
+.stat-kpi-body { flex: 1; min-width: 0; }
+.stat-kpi-value { font-size: 1.55em; font-weight: 800; font-family: 'Montserrat', sans-serif; line-height: 1.2; }
+.stat-kpi-label { font-size: 0.78em; color: var(--text-secondary); margin-top: 2px; }
+.stat-kpi-pct {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.72em;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.stat-kpi-rev {
+  font-size: 0.73em;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+}
+.stat-kpi.blue { border-left: 4px solid var(--blue); }
+.stat-kpi.blue .stat-kpi-value { color: var(--blue); }
+.stat-kpi.green { border-left: 4px solid var(--green); }
+.stat-kpi.green .stat-kpi-value { color: var(--green); }
+.stat-kpi.green .stat-kpi-pct { background: var(--green-light); color: var(--green); }
+.stat-kpi.orange { border-left: 4px solid var(--yellow); }
+.stat-kpi.orange .stat-kpi-value { color: var(--yellow); }
+.stat-kpi.orange .stat-kpi-pct { background: var(--yellow-light); color: var(--yellow); }
+.stat-kpi.red { border-left: 4px solid var(--red); }
+.stat-kpi.red .stat-kpi-value { color: var(--red); }
+.stat-kpi.red .stat-kpi-pct { background: var(--red-light); color: var(--red); }
+.stat-kpi.purple { border-left: 4px solid #7c3aed; }
+.stat-kpi.purple .stat-kpi-value { color: #7c3aed; }
+.stat-kpi.purple .stat-kpi-pct { background: #ede9fe; color: #7c3aed; }
+.stat-kpi.blue-outline { border: 1.5px solid var(--blue); background: var(--blue-bg); }
+.stat-kpi.blue-outline .stat-kpi-value { color: var(--blue); }
+.stat-kpi.green-outline { border: 1.5px solid var(--green); background: var(--green-bg); }
+.stat-kpi.green-outline .stat-kpi-value { color: var(--green); }
+.stat-kpi.red-outline { border: 1.5px solid var(--red); background: var(--red-bg); }
+.stat-kpi.red-outline .stat-kpi-value { color: var(--red); }
+
+/* ===== RESPONSIVE ===== */
+/* FEEDBACK IMAGES */
+.fb-img {
+
+}
+
+/* LOADING OVERLAY */
+.loading-overlay {
+
+}
+
+/* REVENUE REPORT BOXES */
+.rev-box { padding:16px 12px; border-radius:10px; border:1.5px solid var(--border); background:#fff; text-align:center; transition:transform 0.15s; }
+.rev-box:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+.rev-box .rev-label { font-size:0.76em; color:var(--text-muted); margin-bottom:6px; font-weight:500; }
+.rev-box .rev-value { font-size:1.2em; font-weight:800; font-family:'Montserrat',sans-serif; color:var(--text-primary); line-height:1.2; }
+.rev-box .rev-pct { font-size:0.72em; font-weight:700; margin-top:4px; color:var(--text-muted); }
+.rev-box.blue { background:var(--blue-bg); border-color:#93c5fd; } .rev-box.blue .rev-value { color:var(--blue); }
+.rev-box.green { background:var(--green-bg); border-color:#86efac; } .rev-box.green .rev-value { color:var(--green); }
+.rev-box.red { background:var(--red-bg); border-color:#fca5a5; } .rev-box.red .rev-value { color:var(--red); }
+.rev-box.orange { background:var(--yellow-bg); border-color:#fbbf24; } .rev-box.orange .rev-value { color:var(--yellow); }
+.rev-box.purple { background:#ede9fe; border-color:#c4b5fd; } .rev-box.purple .rev-value { color:#7c3aed; }
+.rev-box.green-line { border-left:4px solid var(--green); } .rev-box.green-line .rev-value { color:var(--green); }
+.rev-box.red-line { border-left:4px solid var(--red); } .rev-box.red-line .rev-value { color:var(--red); }
+.rev-box.orange-line { border-left:4px solid var(--yellow); } .rev-box.orange-line .rev-value { color:var(--yellow); }
+.rev-box.purple-line { border-left:4px solid #7c3aed; } .rev-box.purple-line .rev-value { color:#7c3aed; }
+.rev-box.blue-line { border-left:4px solid var(--blue); } .rev-box.blue-line .rev-value { color:var(--blue); }
+.rev-sign { font-size:1.6em; font-weight:900; color:var(--text-muted); font-family:'Montserrat',sans-serif; flex-shrink:0; text-align:center; min-width:24px; }
+
+/* Revenue sub-tabs */
+.rv-tab { padding:12px 24px; border:none; background:none; font-family:inherit; font-size:0.9em; font-weight:600; color:var(--text-muted); cursor:pointer; border-bottom:3px solid transparent; transition:all 0.2s; }
+.rv-tab:hover { color:var(--blue); }
+.rv-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+.rv-page { display:none; }
+.rv-page.active { display:block; }
+
+/* Ops rows */
+.ops-row { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+.ops-row .ops-name { flex:1; padding:10px 14px; background:var(--bg-input); border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:0.9em; font-weight:600; color:var(--text-primary); }
+.ops-row .ops-amount { width:180px; padding:10px 14px; background:var(--bg-input); border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:0.9em; text-align:right; }
+.ops-row .ops-name:focus, .ops-row .ops-amount:focus { outline:none; border-color:var(--blue); }
+
+/* LOADING OVERLAY */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.85);
+  z-index: 9998;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(4px);
+}
+.loading-overlay.show { display: flex; }
+.loading-spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--border);
+  border-top: 4px solid var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--blue);
+}
+.loading-sub {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}
+
+/* FEEDBACK IMAGES */
+.fb-img {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.fb-img:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.fb-img img { width: 100%; display: block; }
+
+/* LIGHTBOX */
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 20px;
+}
+.lightbox-overlay.open { display: flex; }
+.lightbox-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  cursor: default;
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px; right: 28px;
+  font-size: 2.2em;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 960px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .header-title-block { display: none; }
+}
+@media (max-width: 768px) {
+  :root { --sidebar-w: 60px; }
+  .nav-tab .tab-label,
+  .nav-tab .tab-badge,
+  .nav-section-label { display: none; }
+  .nav-tab { justify-content: center; padding: 12px 8px; border-left: 3px solid transparent; }
+  .nav-tab.active { background: var(--blue-bg); border-left-color: var(--blue); }
+  .app-navbar { padding: 10px 6px; }
+}
+@media (max-width: 600px) {
+  :root { --header-h: 64px; --sidebar-w: 54px; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr; }
+  .cost-row { grid-template-columns: 1fr; }
+  .content-wrap { padding: 14px 10px; }
+  .logo-name { font-size: 1.1em; }
+  .logo-wrap { padding: 7px 10px; gap: 9px; }
+  .header-info { display: none; }
+  .header-divider { display: none; }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/js/hadaplus-auth.js"></script>
+</head>
+<body>
+<!-- ===== FIXED HEADER ===== -->
+<header class="app-header">
+  <div class="logo-wrap" style="background:rgba(255,255,255,0.96);border:1px solid rgba(255,255,255,0.9);box-shadow:0 2px 10px rgba(0,0,0,0.15);padding:6px 14px;">
+    <img src="/images/logo.svg" alt="Dung Phát" style="height:42px;width:auto;flex-shrink:0;object-fit:contain;" />
+    <div class="logo-text-block" style="margin-left:4px;">
+      <div class="logo-name" style="color:#dc2626;font-size:1.28em;font-weight:900;letter-spacing:0.04em;">DUNG PHÁT</div>
+      <div class="logo-sub" style="color:#475569;font-weight:600;font-size:0.62em;letter-spacing:0.02em;">Tròn vị hạnh phúc</div>
+    </div>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-info">
+    <div class="header-tagline" style="color:rgba(255,255,255,0.95);font-weight:600;">Giải pháp vận hành đa sàn TikTok & Shopee</div>
+    <div class="header-hotline" style="color:#fef08a;">
+      <span class="hotline-dot" style="background:#fef08a;"></span>Hotline: 0393.060.017
+    </div>
+  </div>
+  <div class="header-title-block">
+    <h1>CÔNG CỤ HỖ TRỢ SELLER ĐA SÀN TIKTOK - SHOPEE</h1>
+    <p>Phân tích đơn hàng, phân tích ads, booking, phân tích doanh thu, tính toán lợi nhuận</p>
+  </div>
+</header>
+
+<!-- ===== VERTICAL SIDEBAR ===== -->
+<nav class="app-navbar">
+  <div class="nav-section-label">Công cụ TikTok Shop</div>
+
+  <button class="nav-tab active" onclick="switchTab('tinh-gia')" id="tab-tinh-gia">
+    <span class="tab-icon">🧮</span>
+    <span class="tab-label">Tính Giá Bán</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('thong-ke')" id="tab-thong-ke">
+    <span class="tab-icon">📊</span>
+    <span class="tab-label">Thống Kê Đơn Hàng</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('ads-gmv')" id="tab-ads-gmv">
+    <span class="tab-icon">📢</span>
+    <span class="tab-label">Thống Kê ADS GMV</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('phan-tich-gmv-max')" id="tab-phan-tich-gmv-max">
+    <span class="tab-icon">🎬</span>
+    <span class="tab-label">Phân Tích GMV MAX</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('roi-huy')" id="tab-roi-huy">
+    <span class="tab-icon">📉</span>
+    <span class="tab-label">Tính ROI Hoàn Huỷ</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('khung-gio')" id="tab-khung-gio">
+    <span class="tab-icon">🕐</span>
+    <span class="tab-label">Khung Giờ Vàng</span>
+  </button>
+
+  <button class="nav-tab" onclick="toggleBaoCao()" id="tab-bao-cao">
+    <span class="tab-icon">📈</span>
+    <span class="tab-label">Báo Cáo Doanh Thu</span>
+  </button>
+  <div class="nav-sub-group" id="subGroup-bao-cao">
+    <button class="nav-sub-tab active" onclick="switchTab('bao-cao')" id="subtab-bao-cao">
+      Đơn đã quyết toán
+    </button>
+    <button class="nav-sub-tab" onclick="switchTab('bao-cao-chua')" id="subtab-bao-cao-chua">
+      Đơn chưa quyết toán
+    </button>
+  </div>
+
+  <button class="nav-tab coming" onclick="switchTab('quan-ly-san-pham')" id="tab-quan-ly-san-pham">
+    <span class="tab-icon">📋</span>
+    <span class="tab-label">Phân Tích Booking</span>
+  </button>
+
+  <div class="nav-section-label">Công cụ Shopee</div>
+
+  <button class="nav-tab" onclick="switchTab('sp-tinh-gia')" id="tab-sp-tinh-gia">
+    <span class="tab-icon">🧮</span>
+    <span class="tab-label">Tính Giá Bán</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('sp-thong-ke')" id="tab-sp-thong-ke">
+    <span class="tab-icon">📊</span>
+    <span class="tab-label">Thống Kê Đơn Hàng</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('sp-roi-huy')" id="tab-sp-roi-huy">
+    <span class="tab-icon">📉</span>
+    <span class="tab-label">Tính ROI Hoàn Huỷ</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('sp-khung-gio')" id="tab-sp-khung-gio">
+    <span class="tab-icon">🕐</span>
+    <span class="tab-label">Khung Giờ Vàng</span>
+  </button>
+
+  <button class="nav-tab" onclick="switchTab('sp-bao-cao')" id="tab-sp-bao-cao">
+    <span class="tab-icon">📈</span>
+    <span class="tab-label">Báo Cáo Doanh Thu</span>
+  </button>
+
+  <div class="nav-section-label">Hỗ trợ</div>
+
+  <button class="nav-tab" onclick="switchTab('huong-dan')" id="tab-huong-dan">
+    <span class="tab-icon">📖</span>
+    <span class="tab-label">Hướng Dẫn Sử Dụng</span>
+  </button>
+
+
+</nav>
+
+<!-- ===== PAGE: TÍNH GIÁ BÁN ===== -->
+<div class="page-content active" id="page-tinh-gia">
+<div class="content-wrap">
+  <div class="grid-2">
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Ngành hàng -->
+      <div class="card">
+        <div class="card-title"><span class="icon">📌</span> Ngành hàng sản phẩm</div>
+        <div class="grid-2" style="gap:12px;align-items:end">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Loại người bán</label>
+            <div class="seller-toggle">
+              <button id="btnStandard" class="active" onclick="setSellerType('standard')">Shop Tiêu Chuẩn</button>
+              <button id="btnMall" onclick="setSellerType('mall')">Shop Mall</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Phí hoa hồng từ ngành hàng</label>
+            <div class="commission-display" id="catCommission">0%</div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:14px">
+          <label>Tìm ngành hàng (gõ tên sản phẩm hoặc ngành hàng để tìm)</label>
+          <div class="search-wrapper" id="searchWrapper">
+            <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input type="text" id="catSearch" placeholder="VD: áo hoodie, son môi, điện thoại, sữa tắm..." autocomplete="off">
+            <button class="search-clear" id="searchClear" onclick="clearCatSearch()">&times;</button>
+            <div class="autocomplete-dropdown" id="acDropdown"></div>
+          </div>
+          <div id="selectedCategory" style="display:none" class="selected-category">
+            <div class="cat-path" id="selectedCatPath"></div>
+            <div class="cat-rate" id="selectedCatRate"></div>
+            <button class="cat-remove" onclick="clearCatSearch()" title="Bỏ chọn">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chi phí vận hành shop -->
+      <div class="card">
+        <div class="card-title" style="justify-content:space-between">
+          <span><span class="icon">🏠</span> Chi phí vận hành shop</span>
+          <label style="display:flex;align-items:center;gap:7px;font-size:0.8em;color:var(--text-secondary);font-weight:500;cursor:pointer;">
+            <input type="checkbox" id="enableShopOps" onchange="toggleShopOpsSection()">
+            Tính chi phí vận hành
+          </label>
+        </div>
+        <div id="shopOpsSection" style="display:none;">
+          <div class="grid-2" style="gap:12px">
+            <div class="form-group">
+              <label>Số đơn hàng 1 tháng</label>
+              <input type="number" id="shopMonthlyOrders" value="5000" step="1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Tổng chi phí vận hành / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="shopMonthlyOpsCost" value="0" readonly>
+            </div>
+          </div>
+          <div class="card-title" style="font-size:0.88em;margin-top:16px;margin-bottom:10px;padding-bottom:7px"><span class="icon">💼</span> Chi phí vận hành</div>
+          <div class="cost-rows" id="shopOpsRows"></div>
+          <div class="cost-actions">
+            <button class="btn btn-secondary btn-sm" type="button" onclick="addCostRow('shopOpsRows')">+ Thêm khoản vận hành</button>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="resetShopCosts()">Xóa nhanh</button>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Tổng chi phí vận hành / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="shopOpsMonthlyTotal" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label>Chi phí vận hành / đơn <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="shopOpsPerOrderDisplay" value="0" readonly>
+            </div>
+          </div>
+          <div class="card-title" style="font-size:0.88em;margin-top:16px;margin-bottom:10px;padding-bottom:7px"><span class="icon">📦</span> Chi phí đóng hàng</div>
+          <div class="cost-rows" id="packCostRows"></div>
+          <div class="cost-actions">
+            <button class="btn btn-secondary btn-sm" type="button" onclick="addCostRow('packCostRows')">+ Thêm khoản đóng hàng</button>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Tổng chi phí đóng hàng / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="packCostMonthlyTotal" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label>Chi phí đóng hàng / đơn <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="packCostPerOrderDisplay" value="0" readonly>
+            </div>
+          </div>
+          <div class="fee-summary" id="shopOpsSummary"></div>
+        </div>
+      </div>
+
+      <!-- Hình thức kinh doanh -->
+      <div class="card">
+        <div class="card-title"><span class="icon">🏛️</span> Hình thức kinh doanh</div>
+        <div class="seller-toggle" style="max-width:460px">
+          <button id="btnHtHkd" class="active" onclick="setHinhThuc('hkd')">Cá nhân / Hộ kinh doanh</button>
+          <button id="btnHtCty" onclick="setHinhThuc('cty')">Công ty</button>
+        </div>
+
+        <div id="ctyConfig" style="display:none;margin-top:16px">
+          <div class="grid-2" style="gap:12px">
+            <div class="form-group" style="margin-bottom:0">
+              <label>Thuế GTGT (VAT) <span class="unit">(%)</span></label>
+              <input type="number" id="ctyVat" value="10" step="0.5" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label>Thuế TNDN <span class="unit">(%)</span></label>
+              <input type="number" id="ctyTndn" value="20" step="0.5" min="0" onchange="recalc()">
+            </div>
+          </div>
+
+          <div class="card-title" style="font-size:0.88em;margin-top:16px;margin-bottom:6px;padding-bottom:7px">
+            <span class="icon">🧾</span> Chứng từ của từng khoản chi
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.75;margin-bottom:10px">
+            <b>Hoá đơn GTGT</b> — được trừ chi phí <i>và</i> khấu trừ VAT đầu vào.<br>
+            <b>Chứng từ, không VAT</b> — được trừ chi phí nhưng <i>không</i> khấu trừ VAT
+            (mua của hộ kinh doanh, hoá đơn bán hàng, bảng lương&hellip;).<br>
+            <b>Không có gì</b> — vẫn tốn tiền thật nhưng <i>không được trừ gì cả</i>.
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px 12px">
+            <div class="cty-hd"><label for="ctyHdVon">Giá vốn hàng</label><select id="ctyHdVon" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+            <div class="cty-hd"><label for="ctyHdSan">Phí sàn (hoa hồng, GD, AFF, voucher)</label><select id="ctyHdSan" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+            <div class="cty-hd"><label for="ctyHdAds">Quảng cáo</label><select id="ctyHdAds" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+            <div class="cty-hd"><label for="ctyHdOps">Vận hành / nhân sự</label><select id="ctyHdOps" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+            <div class="cty-hd"><label for="ctyHdOther">Phí khác</label><select id="ctyHdOther" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+            <div class="cty-hd"><label for="ctyHdCoDinh">Phí cố định / đóng hàng</label><select id="ctyHdCoDinh" onchange="recalc()"><option value="gtgt">Hoá đơn GTGT</option><option value="ct">Chứng từ, không VAT</option><option value="khong">Không có gì</option></select></div>
+          </div>
+        </div>
+
+        <div class="fee-summary" id="htSummary"></div>
+      </div>
+
+      <!-- Cấu hình phí bán hàng -->
+      <div class="card">
+        <div class="card-title collapsible-header" onclick="toggleCollapse(this)"><span class="icon">⚙️</span> Cấu hình phí bán hàng</div>
+        <div class="collapsible-body">
+          <div class="grid-4">
+            <div class="form-group">
+              <label>Thuế <span class="unit">(%)</span></label>
+              <input type="number" id="feeTax" value="1.5" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí giao dịch <span class="unit">(%)</span></label>
+              <input type="number" id="feeTransaction" value="6" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Hoa hồng <span class="unit">(%)</span></label>
+              <input type="number" id="feeCommission" value="10.8" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí AFF <span class="unit">(%)</span></label>
+              <input type="number" id="feeAff" value="0" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Voucher extra <span class="unit">(%)</span></label>
+              <input type="number" id="feeVoucher" value="5" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Vận hành <span class="unit">(%)</span></label>
+              <input type="number" id="feeOps" value="0" step="0.01" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Quảng cáo <span class="unit">(%)</span></label>
+              <input type="number" id="feeAds" value="10" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí khác <span class="unit">(%)</span></label>
+              <input type="number" id="feeOther" value="0" step="0.1" min="0" onchange="recalc()">
+            </div>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Phí xử lý đơn hàng <span class="unit">(VND/đơn)</span></label>
+              <input type="text" inputmode="numeric" id="feeFixedProcessing" value="3000" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Hoàn vận chuyển <span class="unit">(VND/đơn)</span></label>
+              <input type="text" inputmode="numeric" id="feeFixedShipping" value="1620" onchange="recalc()">
+            </div>
+          </div>
+        </div>
+        <div class="fee-summary" id="feeSummary"></div>
+      </div>
+
+      <!-- Quyết toán -->
+      <div class="card" id="cardQuyetToan">
+        <div class="card-title"><span class="icon">📋</span> Quyết toán cuối năm</div>
+        <div class="grid-3" style="gap:12px">
+          <div class="form-group">
+            <label>Chế độ quyết toán</label>
+            <select id="settlementMode" onchange="recalc()">
+              <option value="off">Không áp dụng</option>
+              <option value="over3b">Shop trên 3 tỷ/năm</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>VAT quyết toán <span class="unit">(%)</span></label>
+            <input type="number" id="settlementVat" value="1" step="0.1" min="0" onchange="recalc()">
+          </div>
+          <div class="form-group">
+            <label>Thuế TNCN/LN <span class="unit">(%)</span></label>
+            <input type="number" id="settlementPit" value="17" step="0.1" min="0" onchange="recalc()">
+          </div>
+        </div>
+        <div class="fee-summary" id="settlementSummary"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📦</span> Thông tin sản phẩm</div>
+        <div class="grid-2" style="gap:12px">
+          <div class="form-group">
+            <label>Mã sản phẩm</label>
+            <input type="text" id="prodCode" placeholder="VD: SP001">
+          </div>
+          <div class="form-group">
+            <label>Tên sản phẩm</label>
+            <input type="text" id="prodName" placeholder="VD: Áo Hoodie Unisex">
+          </div>
+        </div>
+        <div class="grid-2" style="gap:12px">
+          <div class="form-group">
+            <label>Giá vốn <span class="unit">(VND)</span></label>
+            <input type="text" inputmode="numeric" id="prodCost" placeholder="VD: 40.000" oninput="recalc()">
+          </div>
+          <div class="form-group">
+            <label>Giá bán <span class="unit">(VND)</span></label>
+            <input type="text" inputmode="numeric" id="prodRef" placeholder="VD: 100.000" oninput="recalc()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phân loại sản phẩm</label>
+          <select id="prodType">
+            <option value="pheu">Sản phẩm phễu (thu hút khách)</option>
+            <option value="lai_tb">Sản phẩm lãi trung bình</option>
+            <option value="chu_luc">Sản phẩm chủ lực (lãi cao)</option>
+          </select>
+        </div>
+
+        <!-- Results -->
+        <div class="result-grid" id="resultGrid">
+          <div class="result-box info">
+            <div class="label">Tổng phí</div>
+            <div class="value" id="rTotalFee">--</div>
+            <div class="sub" id="rFixedFee">Phí cố định: --</div>
+          </div>
+          <div class="result-box breakeven">
+            <div class="label">Giá hòa vốn</div>
+            <div class="value" id="rBreakeven">--</div>
+            <div class="sub" id="rBreakevenSub"></div>
+          </div>
+          <div class="result-box breakeven">
+            <div class="label">ROI hòa vốn</div>
+            <div class="value" id="rRoiBreak">--</div>
+            <div class="sub" id="rRoiBreakSub"></div>
+          </div>
+          <div class="result-box info">
+            <div class="label">Giá bán hiện tại</div>
+            <div class="value" id="rCurPrice">--</div>
+            <div class="sub" id="rCurProfit"></div>
+          </div>
+          <div class="result-box info">
+            <div class="label">Chi phí ads tương ứng</div>
+            <div class="value" id="rAdsCost">--</div>
+            <div class="sub" id="rAdsCostSub"></div>
+          </div>
+          <div class="result-box profit">
+            <div class="label">ROI tương ứng</div>
+            <div class="value" id="rRoiNow">--</div>
+            <div class="sub" id="rRoiNowSub"></div>
+          </div>
+        </div>
+
+        <!-- Kết quả riêng cho Công ty -->
+        <div id="ctyResult" style="display:none;margin-top:18px;padding-top:16px;border-top:2px dashed var(--border)">
+          <div class="card-title" style="font-size:0.92em;margin-bottom:2px;padding-bottom:7px">
+            <span class="icon">🏛️</span> Kết quả cho Công ty <span style="font-size:11px;font-weight:500;color:var(--text-muted)">(sau VAT &amp; TNDN)</span>
+          </div>
+          <div class="result-grid">
+            <div class="result-box info">
+              <div class="label">Tổng phí</div>
+              <div class="value" id="ctTongPhi">--</div>
+              <div class="sub" id="ctTongPhiSub"></div>
+            </div>
+            <div class="result-box info">
+              <div class="label">Doanh thu chưa VAT</div>
+              <div class="value" id="ctDt">--</div>
+              <div class="sub" id="ctDtSub"></div>
+            </div>
+            <div class="result-box breakeven">
+              <div class="label">VAT phải nộp</div>
+              <div class="value" id="ctVat">--</div>
+              <div class="sub" id="ctVatSub"></div>
+            </div>
+            <div class="result-box info">
+              <div class="label">Lợi nhuận trước thuế</div>
+              <div class="value" id="ctLnKt">--</div>
+              <div class="sub" id="ctLnKtSub"></div>
+            </div>
+            <div class="result-box breakeven">
+              <div class="label">Lợi nhuận chịu thuế</div>
+              <div class="value" id="ctLnThue">--</div>
+              <div class="sub" id="ctLnThueSub"></div>
+            </div>
+            <div class="result-box breakeven">
+              <div class="label">Thuế TNDN</div>
+              <div class="value" id="ctThue">--</div>
+              <div class="sub" id="ctThueSub"></div>
+            </div>
+            <div class="result-box breakeven">
+              <div class="label">Tổng thuế phải nộp</div>
+              <div class="value" id="ctTongThue">--</div>
+              <div class="sub" id="ctTongThueSub"></div>
+            </div>
+            <div class="result-box profit">
+              <div class="label">Lợi nhuận sau thuế</div>
+              <div class="value" id="ctSauThue">--</div>
+              <div class="sub" id="ctSauThueSub"></div>
+            </div>
+          </div>
+          <div class="result-grid">
+            <div class="result-box breakeven">
+              <div class="label">Giá hòa vốn sau thuế</div>
+              <div class="value" id="ctHoaVon">--</div>
+              <div class="sub" id="ctHoaVonSub"></div>
+            </div>
+            <div class="result-box breakeven">
+              <div class="label">ROI hòa vốn sau thuế</div>
+              <div class="value" id="ctRoi">--</div>
+              <div class="sub" id="ctRoiSub"></div>
+            </div>
+            <div class="result-box info">
+              <div class="label">Chi phí ads tương ứng</div>
+              <div class="value" id="ctAdsNay">--</div>
+              <div class="sub" id="ctAdsNaySub"></div>
+            </div>
+            <div class="result-box profit">
+              <div class="label">ROI tương ứng</div>
+              <div class="value" id="ctRoiNay">--</div>
+              <div class="sub" id="ctRoiNaySub"></div>
+            </div>
+            <div class="result-box info" id="ctBoxMat">
+              <div class="label">Thiệt hại vì thiếu hoá đơn</div>
+              <div class="value" id="ctMat">--</div>
+              <div class="sub" id="ctMatSub"></div>
+            </div>
+          </div>
+          <div class="ct-ph" id="ctPhanTich" style="display:none"></div>
+          <div class="fee-summary" id="ctNote"></div>
+        </div>
+
+        <!-- Ref price analysis -->
+        <div id="refAnalysis" style="display:none" class="ref-analysis">
+          <div class="ref-analysis-title">Phân tích giá bán</div>
+          <div id="refAnalysisContent"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="addProduct()">+ Thêm sản phẩm</button>
+          <button class="btn btn-secondary" onclick="clearForm()">Xóa form</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end grid-2 -->
+
+  <!-- Product list -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span><span class="icon">📋</span> Danh sách sản phẩm</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" onclick="exportCSV()">📥 Xuất Excel</button>
+        <button class="btn btn-danger btn-sm" onclick="clearAll()">Xóa tất cả</button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Mã SP</th>
+            <th>Tên sản phẩm</th>
+            <th>Phân loại</th>
+            <th class="text-center">Chế độ</th>
+            <th class="text-right">Giá vốn</th>
+            <th class="text-right">Tổng phí</th>
+            <th class="text-right">Hòa vốn</th>
+            <th class="text-right">Giá bán</th>
+            <th class="text-right">Lợi nhuận</th>
+            <th class="text-right">% LN</th>
+            <th class="text-right">LN cuối</th>
+            <th class="text-center">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="productBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">📂</div>
+        Chưa có sản phẩm nào. Hãy nhập thông tin và nhấn "Thêm sản phẩm" để bắt đầu.
+      </div>
+    </div>
+  </div>
+
+  <div class="app-footer">
+    Công cụ tính toán chi phí bán hàng TikTok Shop &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)
+  </div>
+</div>
+</div><!-- end page-tinh-gia -->
+
+<!-- ===== PAGE: THỐNG KÊ ĐƠN HÀNG ===== -->
+<div class="page-content" id="page-thong-ke">
+<div class="content-wrap">
+
+  <!-- Upload section -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file dữ liệu đơn hàng</div>
+    <div style="background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:1.5px solid #93c5fd;border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:0.95em;font-weight:600;color:#1e40af;margin-bottom:6px;">📌 Bạn vui lòng upload file thông tin đơn hàng của shop để tiến hành phân tích:</div>
+      <div style="font-size:0.88em;color:#1e40af;line-height:1.7;">Tổng đơn hàng, đơn hủy, đơn trả hàng hoàn tiền, doanh thu theo trạng thái, biểu đồ thống kê...</div>
+      <div style="font-size:0.82em;color:#3b82f6;margin-top:8px;">💡 Nếu chưa biết cách upload file, vui lòng xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#1d4ed8;font-weight:700;text-decoration:underline;cursor:pointer;">"Hướng Dẫn Sử Dụng"</a> để biết thao tác thực hiện.</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="grid-2" style="gap:16px">
+      <div class="form-group">
+        <label>File "Tất cả đơn hàng" (.xlsx)</label>
+        <input type="file" id="fileAllOrders" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintAllOrders')">
+        <div class="file-hint" id="hintAllOrders">Chưa chọn file</div>
+      </div>
+      <div class="form-group">
+        <label>File "Đơn trả hàng hoàn tiền" (.xlsx) — không bắt buộc</label>
+        <input type="file" id="fileReturnOrders" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintReturnOrders')">
+        <div class="file-hint" id="hintReturnOrders">Chưa chọn file</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processOrderFiles()">📊 Phân tích dữ liệu</button>
+      <button class="btn btn-secondary" onclick="clearOrderStats()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <!-- Stats dashboard - hidden until data loaded -->
+  <div id="statsDashboard" style="display:none"></div><!-- dựng bởi renderOrderStats -->
+
+  <div class="app-footer">
+    Thống kê đơn hàng TikTok Shop &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)
+  </div>
+</div>
+</div>
+
+<!-- ===== PAGE: THỐNG KÊ ADS GMV ===== -->
+<div class="page-content" id="page-ads-gmv">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file Affiliate Orders</div>
+    <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fbbf24;border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Bạn vui lòng upload file Affiliate Orders để phân tích:</div>
+      <div style="font-size:0.88em;color:#92400e;line-height:1.7;">Tổng đơn hoa hồng tự nhiên & quảng cáo, doanh thu, cơ sở hoa hồng, top nhà sáng tạo...</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 Nếu chưa biết cách upload file, vui lòng xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#92400e;font-weight:700;text-decoration:underline;cursor:pointer;">"Hướng Dẫn Sử Dụng"</a> để biết thao tác thực hiện.</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="form-group">
+      <label>File "affiliate_orders" (.xlsx) — xuất từ TikTok Shop Affiliate</label>
+      <input type="file" id="fileAffiliate" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintAffiliate')">
+      <div class="file-hint" id="hintAffiliate">Chưa chọn file</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processAffiliateFile()">📢 Phân tích dữ liệu</button>
+      <button class="btn btn-secondary" onclick="clearAffiliateStats()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="affiliateDashboard" style="display:none">
+    <div style="text-align:right;margin-bottom:12px;"><button class="btn btn-success btn-sm" onclick="exportAffAll()" style="font-size:0.85em;padding:8px 18px;">📥 Xuất tất cả Excel</button></div>
+    <div id="affContent"></div><!-- dựng bởi renderAffiliateStats -->
+  </div>
+
+  <div class="app-footer">Thống kê ADS GMV MAX &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)</div>
+</div>
+</div>
+
+<!-- ===== PAGE: QUẢN LÝ SẢN PHẨM ===== -->
+<div class="page-content" id="page-bao-cao-chua">
+<div class="content-wrap">
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file đơn chưa quyết toán</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Onhold/Unsettled Orders" từ TikTok Shop:</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: Tài chính → Quản lý tài khoản → Đơn hàng chưa quyết toán → Tải xuống</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 Nếu chưa biết cách upload file, vui lòng xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#92400e;font-weight:700;text-decoration:underline;cursor:pointer;">"Hướng Dẫn Sử Dụng"</a> để biết thao tác thực hiện.</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="form-group">
+      <label>File đơn chưa quyết toán (.xlsx)</label>
+      <input type="file" id="fileUnsettled" accept=".xlsx,.xls" class="file-input" onchange="onFileSelected(this,'hintUnsettled')">
+      <div class="file-hint" id="hintUnsettled">Chưa chọn file</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processUnsettled()">📊 Phân tích đơn chưa quyết toán</button>
+      <button class="btn btn-secondary" onclick="clearUnsettled()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="unsettledDashboard" style="display:none">
+
+    <div class="stat-kpi-row">
+      <div class="stat-kpi blue">
+        <div class="stat-kpi-icon">📦</div>
+        <div class="stat-kpi-body">
+          <div class="stat-kpi-value" id="usKpiTotal">0</div>
+          <div class="stat-kpi-label">Tổng đơn chưa QT</div>
+        </div>
+      </div>
+      <div class="stat-kpi green">
+        <div class="stat-kpi-icon">💰</div>
+        <div class="stat-kpi-body">
+          <div class="stat-kpi-value" id="usKpiSettlement">0đ</div>
+          <div class="stat-kpi-label">Tiền quyết toán ước tính</div>
+        </div>
+      </div>
+      <div class="stat-kpi orange">
+        <div class="stat-kpi-icon">📈</div>
+        <div class="stat-kpi-body">
+          <div class="stat-kpi-value" id="usKpiRevenue">0đ</div>
+          <div class="stat-kpi-label">Tổng doanh thu</div>
+        </div>
+      </div>
+      <div class="stat-kpi red">
+        <div class="stat-kpi-icon">📋</div>
+        <div class="stat-kpi-body">
+          <div class="stat-kpi-value" id="usKpiFee">0đ</div>
+          <div class="stat-kpi-label">Tổng phí ước tính</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tổng quan -->
+    <div class="card" style="border-left:4px solid #f59e0b;">
+      <div class="card-title"><span class="icon">💰</span> Tổng quan tiền quyết toán ước tính</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="rev-box green" style="flex:1;min-width:150px;border:2px solid #16a34a"><div class="rev-label">Tiền QT ước tính</div><div class="rev-value" id="usRvSettlement">0đ</div><div class="rev-pct" id="usRvSettlementPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:140px;"><div class="rev-label">Tổng doanh thu</div><div class="rev-value" id="usRvRevenue">0đ</div><div class="rev-pct">100%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:140px;"><div class="rev-label">Tổng phí</div><div class="rev-value" id="usRvFee">0đ</div><div class="rev-pct" id="usRvFeePct">0%</div></div>
+      </div>
+    </div>
+
+    <!-- Chi tiết phí -->
+    <div class="card" style="border-left:4px solid #dc2626;">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết phí ước tính</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px;">
+        <div class="rev-box"><div class="rev-label">Phí giao dịch</div><div class="rev-value" id="usFeeTxn">0đ</div><div class="rev-pct" id="usFeeTxnPct">0%</div></div>
+        <div class="rev-box red-line"><div class="rev-label">Phí hoa hồng TikTok</div><div class="rev-value" id="usFeeComm">0đ</div><div class="rev-pct" id="usFeeCommPct">0%</div></div>
+        <div class="rev-box orange-line"><div class="rev-label">Hoa hồng liên kết</div><div class="rev-value" id="usFeeAff">0đ</div><div class="rev-pct" id="usFeeAffPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí xử lý đơn hàng</div><div class="rev-value" id="usFeeProcess">0đ</div><div class="rev-pct" id="usFeeProcessPct">0%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="rev-box"><div class="rev-label">Phí VC người bán</div><div class="rev-value" id="usFeeShip">0đ</div><div class="rev-pct" id="usFeeShipPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí dịch vụ SFR</div><div class="rev-value" id="usFeeSFR">0đ</div><div class="rev-pct" id="usFeeSFRPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí Voucher Xtra</div><div class="rev-value" id="usFeeVoucher">0đ</div><div class="rev-pct" id="usFeeVoucherPct">0%</div></div>
+        <div class="rev-box" style="border:1.5px solid #fbbf24;background:var(--yellow-bg);"><div class="rev-label">Thuế (GTGT + TNCN)</div><div class="rev-value" style="color:var(--yellow);" id="usFeeTax">0đ</div><div class="rev-pct" id="usFeeTaxPct">0%</div></div>
+      </div>
+    </div>
+
+    <!-- Lý do chưa QT & Timeline -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="icon">⏳</span> Lý do chưa quyết toán</div>
+        <canvas id="usChartReason" height="250"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📅</span> Thời gian QT dự kiến</div>
+        <canvas id="usChartTimeline" height="250"></canvas>
+      </div>
+    </div>
+
+    <!-- Đơn theo ngày -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Đơn chưa quyết toán theo ngày tạo</div>
+      <canvas id="usChartDaily" height="250"></canvas>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ===== PAGE: PHÂN TÍCH GMV MAX (CREATIVE) ===== -->
+<div class="page-content" id="page-phan-tich-gmv-max">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🎬</span> Phân Tích Creative GMV MAX — mổ từng video để tối ưu ads</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Creative data" từ TikTok Ads Manager:</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: TikTok Ads → GMV Max → Chọn sản phẩm → Dữ liệu nội dung sáng tạo → Xuất Excel</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 File phải có các cột: <b>ID bài đăng, Trạng thái, Thời gian đăng, Chi phí, ROI, Số lượng đơn hàng SKU, Doanh thu gộp</b>. Kỳ báo cáo tool tự đọc từ tên file.</div>
+    </div>
+
+    <div class="form-group">
+      <label>File Creative data (.xlsx)</label>
+      <input type="file" id="filePgmv" accept=".xlsx,.xls" class="file-input" onchange="onPgmvFileSelected(this)">
+      <div class="file-hint" id="hintPgmv">Chưa chọn file</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:14px;">
+      <div>
+        <label style="display:block;font-size:0.8em;font-weight:700;color:#475569;margin-bottom:5px;">Kỳ báo cáo — từ ngày</label>
+        <input type="date" id="pgmvFrom" style="width:100%;padding:9px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.92em;font-weight:600;">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.8em;font-weight:700;color:#475569;margin-bottom:5px;">Đến ngày</label>
+        <input type="date" id="pgmvTo" style="width:100%;padding:9px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.92em;font-weight:600;">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.8em;font-weight:700;color:#475569;margin-bottom:5px;">ROI hoà vốn <span style="color:#94a3b8;font-weight:500;">(để chấm lãi/lỗ)</span></label>
+        <input type="text" id="pgmvRoiBE" value="5" style="width:100%;padding:9px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.92em;font-weight:700;text-align:center;color:#dc2626;">
+        <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">= 1 ÷ biên LN gộp. Biên 20% → 5,00</div>
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="processPgmv()">🎬 Phân tích Creative</button>
+      <button class="btn btn-secondary" onclick="clearPgmv()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="pgmvDashboard" style="display:none"></div>
+
+  <div class="app-footer">Phân Tích Creative GMV MAX &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 1.0.0</div>
+</div>
+</div>
+
+<!-- ===== PAGE: KHUNG GIỜ VÀNG ===== -->
+<div class="page-content" id="page-khung-gio">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🕐</span> Phân tích Khung Giờ Vàng — Tìm giờ doanh thu cao nhất</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Tất cả đơn hàng" từ TikTok Shop (1 đến 3 file, mỗi file = 1 tháng):</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: Đơn hàng → Quản lý đơn hàng → Tải tất cả đơn hàng</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 Nhớ đúng 2 cột: <b>Thời gian tạo đơn hàng</b> (Created Time) và <b>GMV</b> (Order Amount). Upload 1-3 file để so sánh nhiều tháng.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:10px;">
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 1</label>
+        <input type="file" id="fileKG1" accept=".xlsx,.xls" class="file-input" onchange="onFileSelected(this,'hintKG1')">
+        <div class="file-hint" id="hintKG1">Chưa chọn file</div>
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 2 <span style="color:var(--text-muted);font-weight:400;">(tuỳ chọn)</span></label>
+        <input type="file" id="fileKG2" accept=".xlsx,.xls" class="file-input" onchange="onFileSelected(this,'hintKG2')">
+        <div class="file-hint" id="hintKG2">Chưa chọn file</div>
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 3 <span style="color:var(--text-muted);font-weight:400;">(tuỳ chọn)</span></label>
+        <input type="file" id="fileKG3" accept=".xlsx,.xls" class="file-input" onchange="onFileSelected(this,'hintKG3')">
+        <div class="file-hint" id="hintKG3">Chưa chọn file</div>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="processKhungGio()">🕐 Phân tích Khung Giờ Vàng</button>
+      <button class="btn btn-secondary" onclick="clearKhungGio()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="khungGioDashboard" style="display:none">
+
+    <div class="card" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;">
+      <div style="font-weight:800;font-size:1em;color:#1e293b;"><span class="icon">🕐</span> Phân tích Khung Giờ Vàng &mdash; tách Ngày Sale vs Ngày Thường</div>
+      <button class="btn btn-success btn-sm" onclick="exportKhungGio()" style="font-size:0.8em;padding:6px 14px;">📥 Xuất Excel</button>
+    </div>
+
+    <div id="kgSaleSection"></div>
+    <div id="kgNormalSection"></div>
+
+  </div>
+
+  <div class="app-footer">Khung Giờ Vàng &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 1.0.0</div>
+</div>
+</div>
+
+<!-- ===== PAGE: TÍNH ROI HOÀN HUỶ ===== -->
+<div class="page-content" id="page-roi-huy">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file đơn hàng — Tính ROI Hoàn Huỷ</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Tất cả đơn hàng" từ TikTok Shop:</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: Đơn hàng → Quản lý đơn hàng → Tải tất cả đơn hàng</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 File phải chứa cột: Order ID, Order Status, Order Amount</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="form-group">
+      <label>File tất cả đơn hàng (.xlsx)</label>
+      <input type="file" id="fileRoiHuy" accept=".xlsx,.xls" class="file-input" onchange="onFileSelected(this,'hintRoiHuy')">
+      <div class="file-hint" id="hintRoiHuy">Chưa chọn file</div>
+    </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label style="font-weight:600;">% Chi phí quảng cáo (CPQC)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+        <input type="number" id="inputCPQC" min="0.1" max="100" step="0.1" value="10" style="width:120px;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:1em;font-weight:600;text-align:center;" placeholder="10">
+        <span style="font-size:0.95em;font-weight:600;color:var(--text-muted);">%</span>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="processRoiHuy()">📊 Tính ROI Hoàn Huỷ</button>
+      <button class="btn btn-secondary" onclick="clearRoiHuy()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="roiHuyDashboard" style="display:none">
+
+    <!-- GMV theo nhóm -->
+    <div class="card" style="margin-top:0;border:1.5px solid #e2e8f0;">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;"><span><span class="icon">🪙</span> GMV theo nhóm</span><button class="btn btn-success btn-sm" onclick="exportRoiHuy()" style="font-size:0.8em;padding:6px 14px;">📥 Xuất Excel</button></div>
+
+      <!-- 3 KPI chính: GMV Tổng | Hao hụt | GMV Thực -->
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:18px;">
+        <div style="border:2px solid #e2e8f0;border-radius:12px;padding:20px 24px;">
+          <div style="font-size:0.78em;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;">GMV TỔNG</div>
+          <div style="font-size:2em;font-weight:800;color:#1e293b;margin:6px 0 4px;" id="roiGmvTotal">0đ</div>
+          <div style="font-size:0.82em;color:#64748b;" id="roiTotalOrdersLabel">0 đơn</div>
+          <div style="font-size:0.78em;color:#94a3b8;margin-top:4px;">Toàn bộ đơn phát sinh trong kỳ</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;">
+          <div style="font-size:0.78em;font-weight:700;color:#64748b;text-transform:uppercase;">HAO HỤT</div>
+          <div style="font-size:2em;font-weight:800;color:#ef4444;margin:4px 0;" id="roiHaoHutPct">0%</div>
+          <div style="font-size:0.82em;color:#ef4444;" id="roiHaoHutGmv">-0đ</div>
+        </div>
+        <div style="border:2px solid #22c55e;border-radius:12px;padding:20px 24px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+          <div style="font-size:0.78em;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;">GMV THỰC</div>
+          <div style="font-size:2em;font-weight:800;color:#16a34a;margin:6px 0 4px;" id="roiGmvReal">0đ</div>
+          <div style="font-size:0.82em;color:#16a34a;" id="roiSuccessOrdersLabel">0 đơn</div>
+          <div style="font-size:0.78em;color:#4ade80;margin-top:4px;">Doanh thu còn lại sau hao hụt</div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div style="display:flex;height:28px;border-radius:8px;overflow:hidden;margin-bottom:18px;font-size:0.75em;font-weight:700;color:#fff;">
+        <div id="roiBarReal" style="background:linear-gradient(90deg,#22c55e,#4ade80);display:flex;align-items:center;justify-content:center;transition:width 0.5s;"></div>
+        <div id="roiBarHaoHut" style="background:linear-gradient(90deg,#f87171,#ef4444);display:flex;align-items:center;justify-content:center;transition:width 0.5s;"></div>
+      </div>
+
+      <!-- 4 loại hao hụt -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+        <div style="border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;background:#fff5f5;">
+          <div style="font-size:0.75em;font-weight:700;color:#dc2626;text-transform:uppercase;">ĐƠN HUỶ</div>
+          <div style="font-size:1.5em;font-weight:800;color:#dc2626;margin:6px 0 2px;" id="roiCancelGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="roiCancelInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Khách / shop / hệ thống huỷ trước khi giao</div>
+        </div>
+        <div style="border:1.5px solid #fdba74;border-radius:10px;padding:14px 16px;background:#fff7ed;">
+          <div style="font-size:0.75em;font-weight:700;color:#ea580c;text-transform:uppercase;">GIAO KHÔNG THÀNH CÔNG</div>
+          <div style="font-size:1.5em;font-weight:800;color:#ea580c;margin:6px 0 2px;" id="roiDeliveryFailGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="roiDeliveryFailInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Giao gói hàng thất bại — bị trả về</div>
+        </div>
+        <div style="border:1.5px solid #c4b5fd;border-radius:10px;padding:14px 16px;background:#faf5ff;">
+          <div style="font-size:0.75em;font-weight:700;color:#7c3aed;text-transform:uppercase;">TRẢ HÀNG HOÀN TIỀN</div>
+          <div style="font-size:1.5em;font-weight:800;color:#7c3aed;margin:6px 0 2px;" id="roiReturnDoneGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="roiReturnDoneInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Đã hoàn tiền xong, tính theo ngày phát sinh</div>
+        </div>
+        <div style="border:1.5px solid #fde68a;border-radius:10px;padding:14px 16px;background:#fffbeb;">
+          <div style="font-size:0.75em;font-weight:700;color:#b45309;text-transform:uppercase;">TRẢ HÀNG ĐANG XỬ LÝ</div>
+          <div style="font-size:1.5em;font-weight:800;color:#b45309;margin:6px 0 2px;" id="roiReturnProcessGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="roiReturnProcessInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Chưa hoàn tiền xong — tick ở trên để tính</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI Kỳ vọng -->
+    <div class="card" style="margin-top:18px;border:1.5px solid #e2e8f0;">
+      <div class="card-title"><span class="icon">🎯</span> ROI kỳ vọng</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;">
+        <div style="border:2px solid #e2e8f0;border-radius:12px;padding:24px;">
+          <div style="font-size:0.82em;font-weight:700;color:#64748b;">ROI KV — chưa tính hoàn huỷ</div>
+          <div style="font-size:2.8em;font-weight:800;color:#1e293b;margin:8px 0 6px;" id="roiKV">0</div>
+          <div style="font-size:0.85em;color:#94a3b8;" id="roiKVFormula">= 100 ÷ 10%</div>
+        </div>
+        <div style="border:2px solid #22c55e;border-radius:12px;padding:24px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+          <div style="font-size:0.82em;font-weight:700;color:#16a34a;">ROI KV' — Đã tính hoàn huỷ</div>
+          <div style="font-size:2.8em;font-weight:800;color:#16a34a;margin:8px 0 6px;" id="roiKVPrime">0</div>
+          <div style="font-size:0.85em;color:#4ade80;" id="roiKVPrimeFormula">= 0 ÷ 0% (tỷ lệ GMV thực)</div>
+        </div>
+      </div>
+
+      <!-- Đọc kết quả -->
+      <div style="background:#f8fafc;border-radius:10px;padding:16px 20px;border:1px solid #e2e8f0;font-size:0.88em;line-height:1.9;color:#334155;">
+        <div style="font-weight:700;margin-bottom:8px;">📖 Đọc kết quả:</div>
+        <div id="roiConclusion"></div>
+      </div>
+    </div>
+
+    <!-- Bảng chi tiết theo trạng thái -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết theo trạng thái đơn hàng</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Trạng thái</th>
+              <th class="text-right">Số đơn</th>
+              <th class="text-right">Tỉ lệ</th>
+              <th class="text-right">GMV</th>
+              <th class="text-right">Tỉ lệ GMV</th>
+            </tr>
+          </thead>
+          <tbody id="roiStatusBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Lý do huỷ -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-title"><span class="icon">🚫</span> Top lý do huỷ đơn</div>
+      <div class="table-wrapper" style="max-height:400px;overflow-y:auto;">
+        <table>
+          <thead style="position:sticky;top:0;background:#fff;z-index:1;">
+            <tr>
+              <th>Lý do huỷ</th>
+              <th class="text-right">Số đơn</th>
+              <th class="text-right">Tỉ lệ</th>
+            </tr>
+          </thead>
+          <tbody id="roiCancelReasonsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="app-footer">Tính ROI Hoàn Huỷ &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 1.0.0</div>
+</div>
+</div>
+
+<div class="page-content" id="page-quan-ly-san-pham">
+<div class="content-wrap">
+  <div class="coming-soon-page">
+    <div class="coming-soon-icon">📦</div>
+    <div class="coming-soon-title">Phân Tích Booking</div>
+    <div class="coming-soon-desc">Phân tích hiệu quả booking, đánh giá creator và tối ưu chiến dịch.</div>
+    <span class="coming-soon-badge">🚀 SẮP RA MẮT</span>
+  </div>
+</div>
+</div>
+
+
+<!-- ===== PAGE: BÁO CÁO ===== -->
+<div class="page-content" id="page-bao-cao">
+<div class="content-wrap">
+
+  <!-- Upload files -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file báo cáo doanh thu</div>
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:0.95em;font-weight:600;color:#15803d;margin-bottom:6px;">📌 Upload 2 file từ TikTok Shop để phân tích doanh thu & lợi nhuận:</div>
+      <div style="font-size:0.88em;color:#15803d;line-height:1.7;">1. File "Tất cả đơn hàng" — lấy từ Quản lý đơn hàng<br>2. File "Income" (Thu nhập) — lấy từ Tài chính → Báo cáo tài chính</div>
+      <div style="font-size:0.82em;color:#16a34a;margin-top:8px;">💡 Nếu chưa biết cách, xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#15803d;font-weight:700;text-decoration:underline;">"Hướng Dẫn Sử Dụng"</a></div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="grid-2" style="gap:16px">
+      <div class="form-group">
+        <label>File "Tất cả đơn hàng" (.xlsx)</label>
+        <input type="file" id="fileRevenueOrders" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintRevenueOrders')">
+        <div class="file-hint" id="hintRevenueOrders">Chưa chọn file</div>
+      </div>
+      <div class="form-group">
+        <label>File "Income / Thu nhập" (.xlsx)</label>
+        <input type="file" id="fileIncome" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintIncome')">
+        <div class="file-hint" id="hintIncome">Chưa chọn file</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="form-group">
+        <label>File "Tất cả đơn hàng tháng trước" (.xlsx) — không bắt buộc</label>
+        <input type="file" id="fileRevenueOrdersPrev" accept=".xlsx,.xls,.csv" class="file-input" onchange="onFileSelected(this,'hintRevenueOrdersPrev')">
+        <div class="file-hint" id="hintRevenueOrdersPrev">Chưa chọn file</div>
+        <div style="font-size:0.8em;color:#e11d48;margin-top:4px;font-style:italic;">⚠️ Để tính giá vốn chính xác, cần upload thêm file đơn hàng tháng trước (nếu file Income có đơn từ tháng trước quyết toán sang)</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processRevenueReport()">📈 Phân tích doanh thu</button>
+      <button class="btn btn-secondary" onclick="clearRevenueReport()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="revenueDashboard" style="display:none">
+
+    <!-- Sub-tab navigation -->
+    <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border);">
+      <button class="rv-tab active" onclick="switchRvTab('kd')" id="rvTab-kd">Kết quả kinh doanh</button>
+      <button class="rv-tab" onclick="switchRvTab('giavon')" id="rvTab-giavon">Nhập giá vốn</button>
+      <button class="rv-tab" onclick="switchRvTab('vanhanh')" id="rvTab-vanhanh">Chi phí vận hành</button>
+    </div>
+
+    <!-- SUB-TAB: Kết quả kinh doanh -->
+    <div class="rv-page active" id="rvPage-kd">
+    <!-- ROW 1: Tổng quan doanh thu -->
+    <div class="card" style="border-left:4px solid var(--blue);">
+      <div class="card-title"><span class="icon">💰</span> Tổng quan tiền quyết toán</div>
+      <!-- Line 1: Tổng tiền quyết toán = Doanh thu - Phí + Điều chỉnh -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="rev-box green" style="flex:1;min-width:170px;border:2px solid #16a34a;"><div class="rev-label">Tổng số tiền quyết toán</div><div class="rev-value" id="rvSettlement">0đ</div><div class="rev-pct" id="rvSettlementPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:170px;"><div class="rev-label">Tổng doanh thu</div><div class="rev-value" id="rvRevenue">0đ</div><div class="rev-pct" id="rvRevenuePct">0%</div><div style="font-size:0.62em;color:var(--text-muted);margin-top:2px;">(sau giảm giá & hoàn tiền)</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:170px;"><div class="rev-label">Tổng phí cho sàn</div><div class="rev-value" id="rvTotalFee">0đ</div><div class="rev-pct" id="rvTotalFeePct">0%</div><div style="font-size:0.62em;color:var(--text-muted);margin-top:2px;">(bao gồm thuế)</div></div>
+        <div class="rev-sign">+</div>
+        <div class="rev-box orange" style="flex:1;min-width:170px;"><div class="rev-label">Điều chỉnh khác</div><div class="rev-value" id="rvAdjustment">0đ</div><div class="rev-pct" id="rvAdjustmentPct">0%</div><div style="font-size:0.62em;color:var(--text-muted);margin-top:2px;">(bồi thường, hoàn tiền...)</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:170px;border:2px solid #f87171;"><div class="rev-label">GMV Ads TikTok</div><div class="rev-value" id="rvGmvAds">0đ</div><div class="rev-pct" id="rvGmvAdsPct">0%</div><div style="font-size:0.62em;color:var(--text-muted);margin-top:2px;">(GMV thanh toán cho QC)</div></div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Chi tiết phí -->
+    <div class="card" style="border-left:4px solid var(--red);">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết phí sàn</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="rev-box"><div class="rev-label">Tổng đơn tiền về</div><div class="rev-value" id="rvOrderCount">0</div><div style="font-size:0.65em;color:#555;margin-top:4px;line-height:1.3;" id="rvOrderCountNote"></div></div>
+        <div class="rev-box green-line"><div class="rev-label">Phí giao dịch</div><div class="rev-value" id="rvFeeTransaction">0đ</div><div class="rev-pct" id="rvFeeTransactionPct">0%</div></div>
+        <div class="rev-box red-line"><div class="rev-label">Phí hoa hồng TikTok Shop</div><div class="rev-value" id="rvFeeCommission">0đ</div><div class="rev-pct" id="rvFeeCommissionPct">0%</div></div>
+        <div class="rev-box orange-line"><div class="rev-label">Hoa hồng liên kết</div><div class="rev-value" id="rvFeeAffiliate">0đ</div><div class="rev-pct" id="rvFeeAffiliatePct">0%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px;">
+        <div class="rev-box purple-line"><div class="rev-label">Phí dịch vụ Voucher Xtra</div><div class="rev-value" id="rvFeeVoucher">0đ</div><div class="rev-pct" id="rvFeeVoucherPct">0%</div></div>
+        <div class="rev-box blue-line"><div class="rev-label">Phí dịch vụ SFR</div><div class="rev-value" id="rvFeeSFR">0đ</div><div class="rev-pct" id="rvFeeSFRPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí dịch vụ hoàn tiền thưởng</div><div class="rev-value" id="rvFeeRefundBonus">0đ</div><div class="rev-pct" id="rvFeeRefundBonusPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí xử lý đơn hàng</div><div class="rev-value" id="rvFeeProcessing">0đ</div><div class="rev-pct" id="rvFeeProcessingPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí vận chuyển người bán</div><div class="rev-value" id="rvFeeShipping">0đ</div><div class="rev-pct" id="rvFeeShippingPct">0%</div></div>
+        <div class="rev-box orange"><div class="rev-label">Thuế sàn đóng (GTGT + TNCN)</div><div class="rev-value" id="rvTaxTotal">0đ</div><div class="rev-pct" id="rvTaxTotalPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí khác <span style="font-size:0.85em;color:var(--text-muted);font-weight:400;">(loại phí chưa liệt kê)</span></div><div class="rev-value" id="rvFeeOther">0đ</div><div class="rev-pct" id="rvFeeOtherPct">0%</div></div>
+      </div>
+      <div id="rvFeeCheck" style="margin-top:10px;font-size:0.8em;padding:9px 13px;border-radius:8px;"></div>
+    </div>
+
+
+    <!-- Thống kê Voucher nền tảng -->
+    <div class="card" id="rvVoucherCard" style="display:none;border-left:4px solid #f59e0b;">
+      <div class="card-title"><span class="icon">🎫</span> Thống kê Voucher & Hỗ trợ nền tảng</div>
+      <div class="grid-4" style="margin-bottom:12px">
+        <div class="result-box breakeven" style="border-left:3px solid #f59e0b">
+          <div class="label">Tổng Tiền Voucher Nền Tảng</div>
+          <div class="value" id="rvVcPlatform">0đ</div>
+        </div>
+        <div class="result-box breakeven" style="border-left:3px solid #3b82f6">
+          <div class="label">Tổng Tiền Được Trợ Ship</div>
+          <div class="value" id="rvVcShipSub">0đ</div>
+        </div>
+        <div class="result-box breakeven" style="border-left:3px solid #16a34a">
+          <div class="label">Tổng Tiền Được Hỗ Trợ</div>
+          <div class="value" id="rvVcTotalSupport">0đ</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #dc2626">
+          <div class="label">Tỷ lệ Voucher NTảng / Phí Voucher Xtra</div>
+          <div class="value" id="rvVcRatio">0,00</div>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-bottom:12px">
+        <div class="result-box info" style="border-left:3px solid #f59e0b">
+          <div class="label">Số Đơn Có Voucher Nền Tảng</div>
+          <div class="value" id="rvVcOrdersPlatform">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #8b5cf6">
+          <div class="label">Số Đơn Sử dụng Mã Seller</div>
+          <div class="value" id="rvVcOrdersSeller">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #3b82f6">
+          <div class="label">Số Đơn Được Trợ Ship</div>
+          <div class="value" id="rvVcOrdersShip">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #dc2626">
+          <div class="label">Số Đơn Khách Trả Phí Ship</div>
+          <div class="value" id="rvVcOrdersPayShip">0</div>
+        </div>
+      </div>
+      <div class="grid-4">
+        <div class="result-box info" style="border-left:3px solid #16a34a">
+          <div class="label">#voucher từ 0-20k</div>
+          <div class="value" id="rvVcR0">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #3b82f6">
+          <div class="label">#voucher từ 20-50k</div>
+          <div class="value" id="rvVcR20">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #f59e0b">
+          <div class="label">#voucher từ 50-100k</div>
+          <div class="value" id="rvVcR50">0</div>
+        </div>
+        <div class="result-box info" style="border-left:3px solid #dc2626">
+          <div class="label">#voucher &gt; 100k</div>
+          <div class="value" id="rvVcR100">0</div>
+        </div>
+      </div>
+
+      <!-- Phân tích theo mức giá đơn hàng -->
+      <div style="margin-top:20px;">
+        <div style="font-size:0.95em;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);">📊 PHÂN TÍCH VOUCHER THEO MỨC GIÁ ĐƠN HÀNG</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="width:100%;font-size:0.88em;">
+            <thead>
+              <tr style="background:var(--bg-input);">
+                <th style="text-align:left;padding:10px 12px;">MỨC GIÁ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">% TỔNG</th>
+                <th style="text-align:right;padding:10px 12px;">AOV</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN CÓ VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">TỔNG VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">VOUCHER TB/ĐƠN</th>
+              </tr>
+            </thead>
+            <tbody id="rvVcPriceRangeTable">
+              <tr><td colspan="7" class="text-center" style="padding:20px;color:var(--text-muted);">Chưa có dữ liệu</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Voucher phổ biến nhất -->
+      <div style="margin-top:20px;">
+        <div style="font-size:0.95em;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);">🏆 TOP VOUCHER PHỔ BIẾN NHẤT</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="width:100%;font-size:0.88em;">
+            <thead>
+              <tr style="background:var(--bg-input);">
+                <th style="text-align:left;padding:10px 12px;">GIÁ TRỊ VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">% TỔNG</th>
+              </tr>
+            </thead>
+            <tbody id="rvVcTopTable">
+              <tr><td colspan="3" class="text-center" style="padding:20px;color:var(--text-muted);">Chưa có dữ liệu</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ROW 3: Lợi nhuận trước thuế -->
+    <div class="card" style="border-left:4px solid var(--green);">
+      <div class="card-title"><span class="icon">📊</span> Lợi nhuận</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div class="rev-box green" style="flex:1;min-width:140px;border:2px solid #16a34a"><div class="rev-label">Lợi nhuận trước thuế</div><div class="rev-value" id="rvProfitBefore">0đ</div><div class="rev-pct" id="rvProfitBeforePct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:140px;"><div class="rev-label">Tiền quyết toán + Đ.chỉnh</div><div class="rev-value" id="rvSettlement2">0đ</div><div class="rev-pct" id="rvSettlement2Pct">0%</div><div style="font-size:0.62em;color:var(--text-muted);margin-top:2px;">(chưa trừ GMV Ads)</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:140px;"><div class="rev-label">Tổng giá vốn</div><div class="rev-value" id="rvCOGS">0đ</div><div class="rev-pct" id="rvCOGSPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box orange" style="flex:1;min-width:140px;"><div class="rev-label">Chi phí quảng cáo</div><div class="rev-value" id="rvAds">0đ</div><div class="rev-pct" id="rvAdsPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box purple" style="flex:1;min-width:140px;"><div class="rev-label">Chi phí vận hành</div><div class="rev-value" id="rvOps">0đ</div><div class="rev-pct" id="rvOpsPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box" style="flex:1;min-width:140px;"><div class="rev-label">Chi phí phụ</div><div class="rev-value" id="rvExtra">0đ</div><div class="rev-pct" id="rvExtraPct">0%</div></div>
+      </div>
+      <!-- Input fields for variable costs -->
+      <div style="margin-top:16px;padding:16px;background:var(--bg-input);border-radius:10px;border:1.5px solid var(--border);">
+        <div style="font-size:0.85em;font-weight:600;color:var(--text-secondary);margin-bottom:10px;">⚙️ Nhập chi phí biến động (VND):</div>
+        <div class="grid-4" style="gap:12px;">
+          <div class="form-group" style="margin:0"><label>Tổng giá vốn</label><input type="text" inputmode="numeric" id="rvInputCOGS" value="0" oninput="fmtMoneyInput(this);recalcRevenue()"></div>
+          <div class="form-group" style="margin:0"><label>Chi phí quảng cáo <span style="font-size:0.85em;color:var(--blue);font-weight:400;">(auto từ GMV Ads)</span></label><input type="text" inputmode="numeric" id="rvInputAds" value="0" oninput="fmtMoneyInput(this);recalcRevenue()"></div>
+          <div class="form-group" style="margin:0"><label>Chi phí vận hành</label><input type="text" inputmode="numeric" id="rvInputOps" value="0" oninput="fmtMoneyInput(this);recalcRevenue()"></div>
+          <div class="form-group" style="margin:0"><label>Chi phí phụ</label><input type="text" inputmode="numeric" id="rvInputExtra" value="0" oninput="fmtMoneyInput(this);recalcRevenue()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: Lợi nhuận sau thuế -->
+    <div class="card" style="border-left:4px solid #7c3aed;">
+      <div class="card-title"><span class="icon">🏦</span> Lợi nhuận sau thuế cuối năm</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div class="rev-box green" style="flex:1;min-width:200px;border:2px solid #16a34a"><div class="rev-label">Lợi nhuận sau thuế</div><div class="rev-value" id="rvNetProfit">0đ</div><div class="rev-pct" id="rvNetProfitPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:200px;"><div class="rev-label">Lợi nhuận trước thuế</div><div class="rev-value" id="rvProfitBefore2">0đ</div><div class="rev-pct" id="rvProfitBefore2Pct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:200px;"><div class="rev-label">Thuế đóng cuối năm</div><div class="rev-value" id="rvYearTax">0đ</div><div class="rev-pct" id="rvYearTaxPct">0%</div></div>
+      </div>
+      <div style="margin-top:12px;font-size:0.82em;color:var(--text-muted);font-style:italic;">⚠️ Thuế đóng cuối năm = 17% × Lợi nhuận trước thuế (Tạm tính)</div>
+    </div>
+
+    <!-- ROW 5: Tổng báo cáo -->
+    <div class="card" id="rvSummaryCard" style="border-left:4px solid #0ea5e9;display:none;">
+      <div class="card-title"><span class="icon">📑</span> Tổng báo cáo kinh doanh</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+              <th style="text-align:left;width:60%;">Hạng mục</th>
+              <th style="text-align:right;">Số tiền (VND)</th>
+              <th style="text-align:right;">Tỷ lệ / Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody id="rvSummaryBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;text-align:center;">
+        <button class="btn btn-primary" onclick="exportRevenueReport()" style="padding:12px 32px;font-size:1em;">📥 Xuất báo cáo Excel</button>
+      </div>
+    </div>
+
+    </div><!-- end rvPage-kd -->
+
+    <!-- SUB-TAB: Nhập giá vốn -->
+    <div class="rv-page" id="rvPage-giavon">
+      <div class="card">
+        <div class="card-title"><span class="icon">📦</span> Nhập giá vốn sản phẩm</div>
+        <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+          <p style="font-size:0.88em;color:#1e40af;font-weight:600;margin:0;">📌 Danh sách sản phẩm đã quyết toán được lấy tự động từ file đơn hàng. Bạn chỉ cần nhập giá vốn / SP → hệ thống tự tính tổng.</p>
+        </div>
+        <!-- Tổng giá vốn trên cùng -->
+        <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #16a34a;border-radius:12px;margin-bottom:18px;">
+          <div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:4px;">TỔNG GIÁ VỐN</div>
+          <div style="font-size:2em;font-weight:900;color:#16a34a;font-family:'Montserrat',sans-serif;" id="cogsGrandTotal">0đ</div>
+          <div style="display:flex;justify-content:center;gap:30px;margin-top:10px;">
+            <div style="font-size:0.85em;color:#1e40af;font-weight:600;">📦 Tổng đơn: <span id="cogsTotalOrders">0</span></div>
+            <div style="font-size:0.85em;color:#7c3aed;font-weight:600;">🏷️ Tổng SKU: <span id="cogsTotalSKU">0</span></div>
+          </div>
+          <div id="cogsNote" style="font-size:0.78em;color:#64748b;margin-top:8px;font-style:italic;"></div>
+        </div>
+        <!-- Toggle: Theo tên SP / Theo phân loại -->
+        <div style="display:flex;gap:0;margin-bottom:14px;border-bottom:2px solid var(--border);">
+          <button class="rv-tab active" onclick="switchCogsView('name')" id="cogsViewTab-name">Theo tên sản phẩm</button>
+          <button class="rv-tab" onclick="switchCogsView('variant')" id="cogsViewTab-variant">Theo phân loại</button>
+        </div>
+        <!-- Bảng theo tên SP -->
+        <div id="cogsView-name">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>STT</th><th>Tên sản phẩm</th><th class="text-right">SL bán</th><th class="text-right" style="min-width:140px;">Giá vốn / SP</th><th class="text-right">Tổng giá vốn</th></tr></thead>
+              <tbody id="cogsTableByName"><tr><td colspan="5" class="text-center" style="color:var(--text-muted);padding:30px;">Chưa có dữ liệu</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Bảng theo phân loại -->
+        <div id="cogsView-variant" style="display:none;">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>STT</th><th>Tên sản phẩm</th><th>Phân loại</th><th class="text-right">SL bán</th><th class="text-right" style="min-width:140px;">Giá vốn / SP</th><th class="text-right">Tổng giá vốn</th></tr></thead>
+              <tbody id="cogsTableByVariant"><tr><td colspan="6" class="text-center" style="color:var(--text-muted);padding:30px;">Chưa có dữ liệu</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- end rvPage-giavon -->
+
+    <!-- SUB-TAB: Chi phí vận hành -->
+    <div class="rv-page" id="rvPage-vanhanh">
+      <div class="card">
+        <div class="card-title"><span class="icon">⚙️</span> Chi phí vận hành</div>
+        <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+          <p style="font-size:0.88em;color:#92400e;font-weight:600;margin:0;">📌 Nhập các khoản chi phí vận hành của shop. Bạn có thể thêm hoặc xóa khoản chi phí tùy ý. Tổng sẽ tự động cập nhật sang tab "Kết quả kinh doanh".</p>
+        </div>
+        <!-- Tổng chi phí trên cùng -->
+        <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #d97706;border-radius:12px;margin-bottom:18px;">
+          <div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:4px;">TỔNG CHI PHÍ VẬN HÀNH</div>
+          <div style="font-size:2em;font-weight:900;color:#d97706;font-family:'Montserrat',sans-serif;" id="opsGrandTotal">0đ</div>
+        </div>
+        <!-- Danh sách chi phí -->
+        <div id="opsRows">
+          <div class="ops-row"><input type="text" class="ops-name" value="Lương nhân viên" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Lương bản thân" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Thuê nhà / kho" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền điện" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền nước" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền internet" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền xăng" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền gửi xe" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Đóng gói / bao bì" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền ship bù" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền hàng hỏng" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền thưởng" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Phí Booking" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Phí làm video" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Chi phí khác" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcOps();">×</button></div>
+        </div>
+        <div class="cost-actions" style="margin-top:14px;">
+          <button class="btn btn-primary btn-sm" onclick="addOpsRow()">+ Thêm khoản vận hành</button>
+          <button class="btn btn-secondary btn-sm" onclick="clearOpsRows()">Xóa nhanh</button>
+        </div>
+      </div>
+    </div><!-- end rvPage-vanhanh -->
+
+  </div>
+
+  <div class="app-footer">Báo cáo doanh thu &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)</div>
+</div>
+</div>
+
+<!-- ===== PAGE: CÀI ĐẶT ===== -->
+<!-- ===== SHOPEE COMING SOON PAGES ===== -->
+<div class="page-content" id="page-sp-tinh-gia">
+<div class="content-wrap">
+  <div class="grid-2">
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Ngành hàng -->
+      <div class="card">
+        <div class="card-title"><span class="icon">📌</span> Ngành hàng sản phẩm</div>
+        <div class="grid-2" style="gap:12px;align-items:end">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Loại người bán</label>
+            <div class="seller-toggle">
+              <button id="sp_btnStandard" class="active" onclick="setSellerType('standard')">Shop Tiêu Chuẩn</button>
+              <button id="sp_btnMall" onclick="setSellerType('mall')">Shop Mall</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Phí cố định ngành hàng</label>
+            <div class="commission-display" id="sp_catCommission">0%</div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:14px">
+          <label>Tìm ngành hàng (gõ tên sản phẩm hoặc ngành hàng để tìm)</label>
+          <div class="search-wrapper" id="sp_searchWrapper">
+            <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input type="text" id="sp_catSearch" placeholder="VD: áo hoodie, son môi, điện thoại, sữa tắm..." autocomplete="off">
+            <button class="search-clear" id="sp_searchClear" onclick="clearCatSearch()">&times;</button>
+            <div class="autocomplete-dropdown" id="sp_acDropdown"></div>
+          </div>
+          <div id="sp_selectedCategory" style="display:none" class="selected-category">
+            <div class="cat-path" id="sp_selectedCatPath"></div>
+            <div class="cat-rate" id="sp_selectedCatRate"></div>
+            <button class="cat-remove" onclick="clearCatSearch()" title="Bỏ chọn">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chi phí vận hành shop -->
+      <div class="card">
+        <div class="card-title" style="justify-content:space-between">
+          <span><span class="icon">🏠</span> Chi phí vận hành shop</span>
+          <label style="display:flex;align-items:center;gap:7px;font-size:0.8em;color:var(--text-secondary);font-weight:500;cursor:pointer;">
+            <input type="checkbox" id="sp_enableShopOps" onchange="toggleShopOpsSection()">
+            Tính chi phí vận hành
+          </label>
+        </div>
+        <div id="sp_shopOpsSection" style="display:none;">
+          <div class="grid-2" style="gap:12px">
+            <div class="form-group">
+              <label>Số đơn hàng 1 tháng</label>
+              <input type="number" id="sp_shopMonthlyOrders" value="5000" step="1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Tổng chi phí vận hành / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="sp_shopMonthlyOpsCost" value="0" readonly>
+            </div>
+          </div>
+          <div class="card-title" style="font-size:0.88em;margin-top:16px;margin-bottom:10px;padding-bottom:7px"><span class="icon">💼</span> Chi phí vận hành</div>
+          <div class="cost-rows" id="sp_shopOpsRows"></div>
+          <div class="cost-actions">
+            <button class="btn btn-secondary btn-sm" type="button" onclick="addCostRow('shopOpsRows')">+ Thêm khoản vận hành</button>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="resetShopCosts()">Xóa nhanh</button>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Tổng chi phí vận hành / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="sp_shopOpsMonthlyTotal" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label>Chi phí vận hành / đơn <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="sp_shopOpsPerOrderDisplay" value="0" readonly>
+            </div>
+          </div>
+          <div class="card-title" style="font-size:0.88em;margin-top:16px;margin-bottom:10px;padding-bottom:7px"><span class="icon">📦</span> Chi phí đóng hàng</div>
+          <div class="cost-rows" id="sp_packCostRows"></div>
+          <div class="cost-actions">
+            <button class="btn btn-secondary btn-sm" type="button" onclick="addCostRow('packCostRows')">+ Thêm khoản đóng hàng</button>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Tổng chi phí đóng hàng / tháng <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="sp_packCostMonthlyTotal" value="0" readonly>
+            </div>
+            <div class="form-group">
+              <label>Chi phí đóng hàng / đơn <span class="unit">(VND)</span></label>
+              <input type="text" inputmode="numeric" id="sp_packCostPerOrderDisplay" value="0" readonly>
+            </div>
+          </div>
+          <div class="fee-summary" id="sp_shopOpsSummary"></div>
+        </div>
+      </div>
+
+      <!-- Cấu hình phí bán hàng -->
+      <div class="card">
+        <div class="card-title collapsible-header" onclick="toggleCollapse(this)"><span class="icon">⚙️</span> Cấu hình phí bán hàng</div>
+        <div class="collapsible-body">
+          <div class="grid-4">
+            <div class="form-group">
+              <label>Thuế <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeTax" value="1.5" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí xử lý giao dịch <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeTransaction" value="6" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí cố định <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeCommission" value="10.8" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí AFF <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeAff" value="0" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Voucher extra <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeVoucher" value="5.5" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Vận hành <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeOps" value="0" step="0.01" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Quảng cáo <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeAds" value="10" step="0.1" min="0" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Phí khác <span class="unit">(%)</span></label>
+              <input type="number" id="sp_feeOther" value="0" step="0.1" min="0" onchange="recalc()">
+            </div>
+          </div>
+          <div class="grid-2" style="gap:12px;margin-top:10px">
+            <div class="form-group">
+              <label>Phí hạ tầng <span class="unit">(VND/đơn)</span></label>
+              <input type="text" inputmode="numeric" id="sp_feeFixedProcessing" value="3000" onchange="recalc()">
+            </div>
+            <div class="form-group">
+              <label>Piship <span class="unit">(VND/đơn)</span></label>
+              <input type="text" inputmode="numeric" id="sp_feeFixedShipping" value="2700" onchange="recalc()">
+            </div>
+          </div>
+        </div>
+        <div class="fee-summary" id="sp_feeSummary">
+          <div class="fee-item">Tổng phí: <span>0%</span></div>
+          <div class="fee-item">Phí cố định: <span>5.700 đ/đơn</span></div>
+          <div class="fee-item" style="width:100%;margin-top:4px;font-size:0.85em;color:var(--text-muted);">(Hạ tầng: 3.000đ + Piship: 2.700đ + VH: 0đ + Đóng hàng: 0đ)</div>
+        </div>
+      </div>
+
+      <!-- Quyết toán -->
+      <div class="card">
+        <div class="card-title"><span class="icon">📋</span> Quyết toán cuối năm</div>
+        <div class="grid-3" style="gap:12px">
+          <div class="form-group">
+            <label>Chế độ quyết toán</label>
+            <select id="sp_settlementMode" onchange="recalc()">
+              <option value="off">Không áp dụng</option>
+              <option value="over3b">Shop trên 3 tỷ/năm</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>VAT quyết toán <span class="unit">(%)</span></label>
+            <input type="number" id="sp_settlementVat" value="1" step="0.1" min="0" onchange="recalc()">
+          </div>
+          <div class="form-group">
+            <label>Thuế TNCN/LN <span class="unit">(%)</span></label>
+            <input type="number" id="sp_settlementPit" value="17" step="0.1" min="0" onchange="recalc()">
+          </div>
+        </div>
+        <div class="fee-summary" id="sp_settlementSummary"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📦</span> Thông tin sản phẩm</div>
+        <div class="grid-2" style="gap:12px">
+          <div class="form-group">
+            <label>Mã sản phẩm</label>
+            <input type="text" id="sp_prodCode" placeholder="VD: SP001">
+          </div>
+          <div class="form-group">
+            <label>Tên sản phẩm</label>
+            <input type="text" id="sp_prodName" placeholder="VD: Áo Hoodie Unisex">
+          </div>
+        </div>
+        <div class="grid-2" style="gap:12px">
+          <div class="form-group">
+            <label>Giá vốn <span class="unit">(VND)</span></label>
+            <input type="text" inputmode="numeric" id="sp_prodCost" placeholder="VD: 40.000" oninput="recalc()">
+          </div>
+          <div class="form-group">
+            <label>Giá bán <span class="unit">(VND)</span></label>
+            <input type="text" inputmode="numeric" id="sp_prodRef" placeholder="VD: 100.000" oninput="recalc()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phân loại sản phẩm</label>
+          <select id="sp_prodType">
+            <option value="pheu">Sản phẩm phễu (thu hút khách)</option>
+            <option value="lai_tb">Sản phẩm lãi trung bình</option>
+            <option value="chu_luc">Sản phẩm chủ lực (lãi cao)</option>
+          </select>
+        </div>
+
+        <!-- Results -->
+        <div class="result-grid" id="sp_resultGrid">
+          <div class="result-box info">
+            <div class="label">Tổng phí</div>
+            <div class="value" id="sp_rTotalFee">--</div>
+            <div class="sub" id="sp_rFixedFee">Phí cố định: --</div>
+          </div>
+          <div class="result-box breakeven">
+            <div class="label">Giá hòa vốn</div>
+            <div class="value" id="sp_rBreakeven">--</div>
+            <div class="sub" id="sp_rBreakevenSub"></div>
+          </div>
+          <div class="result-box breakeven">
+            <div class="label">ROI hòa vốn</div>
+            <div class="value" id="sp_rRoiBreak">--</div>
+            <div class="sub" id="sp_rRoiBreakSub"></div>
+          </div>
+          <div class="result-box info">
+            <div class="label">Giá bán hiện tại</div>
+            <div class="value" id="sp_rCurPrice">--</div>
+            <div class="sub" id="sp_rCurProfit"></div>
+          </div>
+          <div class="result-box info">
+            <div class="label">Chi phí ads tương ứng</div>
+            <div class="value" id="sp_rAdsCost">--</div>
+            <div class="sub" id="sp_rAdsCostSub"></div>
+          </div>
+          <div class="result-box profit">
+            <div class="label">ROI tương ứng</div>
+            <div class="value" id="sp_rRoiNow">--</div>
+            <div class="sub" id="sp_rRoiNowSub"></div>
+          </div>
+        </div>
+
+        <!-- Ref price analysis -->
+        <div id="sp_refAnalysis" style="display:none" class="ref-analysis">
+          <div class="ref-analysis-title">Phân tích giá bán</div>
+          <div id="sp_refAnalysisContent"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="addProduct()">+ Thêm sản phẩm</button>
+          <button class="btn btn-secondary" onclick="clearForm()">Xóa form</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end grid-2 -->
+
+  <!-- Product list -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span><span class="icon">📋</span> Danh sách sản phẩm</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" onclick="exportCSV()">📥 Xuất Excel</button>
+        <button class="btn btn-danger btn-sm" onclick="clearAll()">Xóa tất cả</button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Mã SP</th>
+            <th>Tên sản phẩm</th>
+            <th>Phân loại</th>
+            <th class="text-center">Chế độ</th>
+            <th class="text-right">Giá vốn</th>
+            <th class="text-right">Tổng phí</th>
+            <th class="text-right">Hòa vốn</th>
+            <th class="text-right">Giá bán</th>
+            <th class="text-right">Lợi nhuận</th>
+            <th class="text-right">% LN</th>
+            <th class="text-right">LN cuối</th>
+            <th class="text-center">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="sp_productBody"></tbody>
+      </table>
+      <div class="empty-state" id="sp_emptyState">
+        <div class="empty-state-icon">📂</div>
+        Chưa có sản phẩm nào. Hãy nhập thông tin và nhấn "Thêm sản phẩm" để bắt đầu.
+      </div>
+    </div>
+  </div>
+
+  <div class="app-footer">
+    Công cụ tính toán chi phí bán hàng Shopee &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)
+  </div>
+</div>
+</div><!-- end page-tinh-gia -->
+
+<div class="page-content" id="page-sp-thong-ke">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file đơn hàng Shopee</div>
+    <div style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fb923c;border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:0.95em;font-weight:600;color:#c2410c;margin-bottom:6px;">📌 Upload file đơn hàng Shopee (.xlsx) để phân tích:</div>
+      <div style="font-size:0.88em;color:#c2410c;line-height:1.7;">Hỗ trợ upload nhiều file (part 1, part 2...). Dữ liệu sẽ được gộp lại tự động.</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 Nếu chưa biết cách upload file, vui lòng xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#92400e;font-weight:700;text-decoration:underline;cursor:pointer;">"Hướng Dẫn Sử Dụng"</a> để biết thao tác thực hiện.</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="form-group">
+      <label>File "Tất cả đơn hàng" Shopee (.xlsx) — có thể chọn nhiều file</label>
+      <input type="file" id="spFileOrders" accept=".xlsx,.xls,.csv" class="file-input" multiple onchange="onFileSelected(this,'spHintOrders')">
+      <div class="file-hint" id="spHintOrders">Chưa chọn file</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processShopeeOrders()">📊 Phân tích dữ liệu</button>
+      <button class="btn btn-secondary" onclick="clearShopeeStats()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="spStatsDashboard" style="display:none"></div><!-- dựng bởi renderShopeeStats -->
+</div>
+</div>
+<!-- ===== PAGE: TÍNH ROI HOÀN HUỶ — SHOPEE ===== -->
+<div class="page-content" id="page-sp-roi-huy">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file đơn hàng — Tính ROI Hoàn Huỷ</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Tất cả đơn hàng" từ Shopee (chọn được nhiều file):</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: Kênh Người Bán → Đơn hàng → Xuất báo cáo. File tách part 1 / part 2 thì chọn cả hai.</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 File phải chứa cột: Mã đơn hàng, Trạng Thái Đơn Hàng, Tổng giá trị đơn hàng, Lý do hủy</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="form-group">
+      <label>File "Tất cả đơn hàng" Shopee (.xlsx) — chọn nhiều file</label>
+      <input type="file" id="spFileRoiHuy" accept=".xlsx,.xls" multiple class="file-input" onchange="onFileSelected(this,'spHintRoiHuy')">
+      <div class="file-hint" id="spHintRoiHuy">Chưa chọn file</div>
+    </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label style="font-weight:600;">% Chi phí quảng cáo (CPQC)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+        <input type="number" id="spInputCPQC" min="0.1" max="100" step="0.1" value="10" style="width:120px;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:1em;font-weight:600;text-align:center;" placeholder="10">
+        <span style="font-size:0.95em;font-weight:600;color:var(--text-muted);">%</span>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="processSpRoiHuy()">📊 Tính ROI Hoàn Huỷ</button>
+      <button class="btn btn-secondary" onclick="clearSpRoiHuy()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="spRoiHuyDashboard" style="display:none">
+
+    <!-- GMV theo nhóm -->
+    <div class="card" style="margin-top:0;border:1.5px solid #e2e8f0;">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;"><span><span class="icon">🪙</span> GMV theo nhóm</span><button class="btn btn-success btn-sm" onclick="exportSpRoiHuy()" style="font-size:0.8em;padding:6px 14px;">📥 Xuất Excel</button></div>
+
+      <!-- 3 KPI chính: GMV Tổng | Hao hụt | GMV Thực -->
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:18px;">
+        <div style="border:2px solid #e2e8f0;border-radius:12px;padding:20px 24px;">
+          <div style="font-size:0.78em;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;">GMV TỔNG</div>
+          <div style="font-size:2em;font-weight:800;color:#1e293b;margin:6px 0 4px;" id="spRoiGmvTotal">0đ</div>
+          <div style="font-size:0.82em;color:#64748b;" id="spRoiTotalOrdersLabel">0 đơn</div>
+          <div style="font-size:0.78em;color:#94a3b8;margin-top:4px;">Toàn bộ đơn phát sinh trong kỳ</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;">
+          <div style="font-size:0.78em;font-weight:700;color:#64748b;text-transform:uppercase;">HAO HỤT</div>
+          <div style="font-size:2em;font-weight:800;color:#ef4444;margin:4px 0;" id="spRoiHaoHutPct">0%</div>
+          <div style="font-size:0.82em;color:#ef4444;" id="spRoiHaoHutGmv">-0đ</div>
+        </div>
+        <div style="border:2px solid #22c55e;border-radius:12px;padding:20px 24px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+          <div style="font-size:0.78em;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;">GMV THỰC</div>
+          <div style="font-size:2em;font-weight:800;color:#16a34a;margin:6px 0 4px;" id="spRoiGmvReal">0đ</div>
+          <div style="font-size:0.82em;color:#16a34a;" id="spRoiSuccessOrdersLabel">0 đơn</div>
+          <div style="font-size:0.78em;color:#4ade80;margin-top:4px;">Doanh thu còn lại sau hao hụt</div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div style="display:flex;height:28px;border-radius:8px;overflow:hidden;margin-bottom:18px;font-size:0.75em;font-weight:700;color:#fff;">
+        <div id="spRoiBarReal" style="background:linear-gradient(90deg,#22c55e,#4ade80);display:flex;align-items:center;justify-content:center;transition:width 0.5s;"></div>
+        <div id="spRoiBarHaoHut" style="background:linear-gradient(90deg,#f87171,#ef4444);display:flex;align-items:center;justify-content:center;transition:width 0.5s;"></div>
+      </div>
+
+      <!-- 4 loại hao hụt -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+        <div style="border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;background:#fff5f5;">
+          <div style="font-size:0.75em;font-weight:700;color:#dc2626;text-transform:uppercase;">ĐƠN HUỶ</div>
+          <div style="font-size:1.5em;font-weight:800;color:#dc2626;margin:6px 0 2px;" id="spRoiCancelGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="spRoiCancelInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Khách / shop / hệ thống huỷ trước khi giao</div>
+        </div>
+        <div style="border:1.5px solid #fdba74;border-radius:10px;padding:14px 16px;background:#fff7ed;">
+          <div style="font-size:0.75em;font-weight:700;color:#ea580c;text-transform:uppercase;">GIAO KHÔNG THÀNH CÔNG</div>
+          <div style="font-size:1.5em;font-weight:800;color:#ea580c;margin:6px 0 2px;" id="spRoiDeliveryFailGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="spRoiDeliveryFailInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Giao gói hàng thất bại — bị trả về</div>
+        </div>
+        <div style="border:1.5px solid #c4b5fd;border-radius:10px;padding:14px 16px;background:#faf5ff;">
+          <div style="font-size:0.75em;font-weight:700;color:#7c3aed;text-transform:uppercase;">TRẢ HÀNG HOÀN TIỀN</div>
+          <div style="font-size:1.5em;font-weight:800;color:#7c3aed;margin:6px 0 2px;" id="spRoiReturnDoneGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="spRoiReturnDoneInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Đã hoàn tiền xong, tính theo ngày phát sinh</div>
+        </div>
+        <div style="border:1.5px solid #fde68a;border-radius:10px;padding:14px 16px;background:#fffbeb;">
+          <div style="font-size:0.75em;font-weight:700;color:#b45309;text-transform:uppercase;">TRẢ HÀNG ĐANG XỬ LÝ</div>
+          <div style="font-size:1.5em;font-weight:800;color:#b45309;margin:6px 0 2px;" id="spRoiReturnProcessGmv">0đ</div>
+          <div style="font-size:0.78em;color:#64748b;" id="spRoiReturnProcessInfo">0 đơn · 0% GMV tổng</div>
+          <div style="font-size:0.72em;color:#94a3b8;margin-top:4px;">Chưa hoàn tiền xong — tick ở trên để tính</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROI Kỳ vọng -->
+    <div class="card" style="margin-top:18px;border:1.5px solid #e2e8f0;">
+      <div class="card-title"><span class="icon">🎯</span> ROI kỳ vọng</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;">
+        <div style="border:2px solid #e2e8f0;border-radius:12px;padding:24px;">
+          <div style="font-size:0.82em;font-weight:700;color:#64748b;">ROI KV — chưa tính hoàn huỷ</div>
+          <div style="font-size:2.8em;font-weight:800;color:#1e293b;margin:8px 0 6px;" id="spRoiKV">0</div>
+          <div style="font-size:0.85em;color:#94a3b8;" id="spRoiKVFormula">= 100 ÷ 10%</div>
+        </div>
+        <div style="border:2px solid #22c55e;border-radius:12px;padding:24px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+          <div style="font-size:0.82em;font-weight:700;color:#16a34a;">ROI KV' — Đã tính hoàn huỷ</div>
+          <div style="font-size:2.8em;font-weight:800;color:#16a34a;margin:8px 0 6px;" id="spRoiKVPrime">0</div>
+          <div style="font-size:0.85em;color:#4ade80;" id="spRoiKVPrimeFormula">= 0 ÷ 0% (tỷ lệ GMV thực)</div>
+        </div>
+      </div>
+
+      <!-- Đọc kết quả -->
+      <div style="background:#f8fafc;border-radius:10px;padding:16px 20px;border:1px solid #e2e8f0;font-size:0.88em;line-height:1.9;color:#334155;">
+        <div style="font-weight:700;margin-bottom:8px;">📖 Đọc kết quả:</div>
+        <div id="spRoiConclusion"></div>
+      </div>
+    </div>
+
+    <!-- Bảng chi tiết theo trạng thái -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết theo trạng thái đơn hàng</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Trạng thái</th>
+              <th class="text-right">Số đơn</th>
+              <th class="text-right">Tỉ lệ</th>
+              <th class="text-right">GMV</th>
+              <th class="text-right">Tỉ lệ GMV</th>
+            </tr>
+          </thead>
+          <tbody id="spRoiStatusBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Lý do huỷ -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-title"><span class="icon">🚫</span> Top lý do huỷ đơn</div>
+      <div class="table-wrapper" style="max-height:400px;overflow-y:auto;">
+        <table>
+          <thead style="position:sticky;top:0;background:#fff;z-index:1;">
+            <tr>
+              <th>Lý do huỷ</th>
+              <th class="text-right">Số đơn</th>
+              <th class="text-right">Tỉ lệ</th>
+            </tr>
+          </thead>
+          <tbody id="spRoiCancelReasonsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="app-footer">Tính ROI Hoàn Huỷ &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 1.0.0</div>
+</div>
+</div>
+
+<div class="page-content" id="page-quan-ly-san-pham">
+<div class="content-wrap">
+  <div class="coming-soon-page">
+    <div class="coming-soon-icon">📦</div>
+    <div class="coming-soon-title">Phân Tích Booking</div>
+    <div class="coming-soon-desc">Phân tích hiệu quả booking, đánh giá creator và tối ưu chiến dịch.</div>
+    <span class="coming-soon-badge">🚀 SẮP RA MẮT</span>
+  </div>
+</div>
+</div>
+
+<!-- ===== PAGE: KHUNG GIỜ VÀNG — SHOPEE ===== -->
+<div class="page-content" id="page-sp-khung-gio">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🕐</span> Phân tích Khung Giờ Vàng — Tìm giờ doanh thu cao nhất</div>
+    <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+      <div style="font-size:0.95em;font-weight:600;color:#92400e;margin-bottom:6px;">📌 Upload file "Tất cả đơn hàng" từ Shopee (tối đa 3 tháng, mỗi ô = 1 tháng):</div>
+      <div style="font-size:0.88em;color:#92400e;">Lấy từ: Kênh Người Bán → Đơn hàng → Xuất báo cáo. File bị cắt part 1 / part 2 thì chọn cả hai vào cùng 1 ô.</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 File phải có 3 cột: <b>Mã đơn hàng</b> &middot; <b>Ngày đặt hàng</b> &middot; <b>Tổng giá trị đơn hàng (VND)</b>. Mỗi ô chọn được nhiều file.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:10px;">
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 1 <span style="color:var(--text-muted);font-weight:400;">(chọn nhiều file)</span></label>
+        <input type="file" id="spFileKG1" accept=".xlsx,.xls" multiple class="file-input" onchange="onFileSelected(this,'spHintKG1')">
+        <div class="file-hint" id="spHintKG1">Chưa chọn file</div>
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 2 <span style="color:var(--text-muted);font-weight:400;">(tuỳ chọn)</span></label>
+        <input type="file" id="spFileKG2" accept=".xlsx,.xls" multiple class="file-input" onchange="onFileSelected(this,'spHintKG2')">
+        <div class="file-hint" id="spHintKG2">Chưa chọn file</div>
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.9em;">📁 File tháng 3 <span style="color:var(--text-muted);font-weight:400;">(tuỳ chọn)</span></label>
+        <input type="file" id="spFileKG3" accept=".xlsx,.xls" multiple class="file-input" onchange="onFileSelected(this,'spHintKG3')">
+        <div class="file-hint" id="spHintKG3">Chưa chọn file</div>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="processSpKhungGio()">🕐 Phân tích Khung Giờ Vàng</button>
+      <button class="btn btn-secondary" onclick="clearSpKhungGio()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="spKhungGioDashboard" style="display:none">
+
+    <div class="card" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;">
+      <div style="font-weight:800;font-size:1em;color:#1e293b;"><span class="icon">🕐</span> Phân tích Khung Giờ Vàng &mdash; tách Ngày Sale vs Ngày Thường</div>
+      <button class="btn btn-success btn-sm" onclick="exportSpKhungGio()" style="font-size:0.8em;padding:6px 14px;">📥 Xuất Excel</button>
+    </div>
+
+    <div id="spKgSaleSection"></div>
+    <div id="spKgNormalSection"></div>
+
+  </div>
+
+  <div class="app-footer">Khung Giờ Vàng Shopee &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 1.0.0</div>
+</div>
+</div>
+
+<div class="page-content" id="page-sp-bao-cao">
+<div class="content-wrap">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📁</span> Tải file báo cáo thu nhập Shopee</div>
+    <div style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fb923c;border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:0.95em;font-weight:600;color:#c2410c;margin-bottom:6px;">📌 Upload 2 loại file từ Shopee để phân tích doanh thu & lợi nhuận:</div>
+      <div style="font-size:0.88em;color:#c2410c;line-height:1.8;">
+        1. File <b>"Tất cả đơn hàng"</b> (.xlsx) — lấy từ Kênh Người Bán → Đơn hàng → Xuất báo cáo<br>
+        2. File <b>"Báo cáo thu nhập"</b> (.pdf) — lấy từ Tài chính → Số dư tài khoản → Báo cáo hàng tuần
+      </div>
+      <div style="font-size:0.85em;color:#b45309;margin-top:8px;">📎 Cả 2 loại đều <b>chọn được nhiều file</b> (đơn hàng part 1/part 2, báo cáo tuần 1/2/3/4) — tool tự gộp lại.</div>
+      <div style="font-size:0.82em;color:#d97706;margin-top:8px;">💡 Nếu chưa biết cách upload file, vui lòng xem tab <a href="#" onclick="switchTab('huong-dan');return false;" style="color:#92400e;font-weight:700;text-decoration:underline;cursor:pointer;">"Hướng Dẫn Sử Dụng"</a> để biết thao tác thực hiện.</div>
+      <div style="font-size:0.82em;color:#dc2626;margin-top:6px;">📞 Hỗ trợ kỹ thuật & tư vấn vận hành Dung Phát &bull; Hotline / Zalo: <a href="https://zalo.me/0393060017" target="_blank" style="color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;">0393 060 017</a></div>
+    </div>
+    <div class="grid-2" style="gap:16px">
+      <div class="form-group">
+        <label>1️⃣ File "Tất cả đơn hàng" Shopee (.xlsx) — chọn nhiều file</label>
+        <input type="file" id="spRevenueOrders" accept=".xlsx,.xls" class="file-input" multiple onchange="onFileSelected(this,'spHintRevOrders')">
+        <div class="file-hint" id="spHintRevOrders">Chưa chọn file</div>
+      </div>
+      <div class="form-group">
+        <label>2️⃣ File "Báo cáo thu nhập / quyết toán" Shopee (.pdf) — chọn nhiều file</label>
+        <input type="file" id="spIncomeFiles" accept=".pdf" class="file-input" multiple onchange="onFileSelected(this,'spHintIncome')">
+        <div class="file-hint" id="spHintIncome">Chưa chọn file</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="processShopeeRevenue()">📊 Phân tích doanh thu</button>
+      <button class="btn btn-secondary" onclick="clearShopeeRevenue()">Xóa dữ liệu</button>
+    </div>
+  </div>
+
+  <div id="spRevDashboard" style="display:none">
+
+    <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border);">
+      <button class="rv-tab active" onclick="switchSpRvTab('kd')" id="spRvTab-kd">Kết quả kinh doanh</button>
+      <button class="rv-tab" onclick="switchSpRvTab('giavon')" id="spRvTab-giavon">Nhập giá vốn</button>
+      <button class="rv-tab" onclick="switchSpRvTab('vanhanh')" id="spRvTab-vanhanh">Chi phí vận hành</button>
+    </div>
+
+    <div class="rv-page active" id="spRvPage-kd">
+
+    <!-- ROW 1: Tổng quan -->
+    <div class="card" style="border-left:4px solid #2563eb;">
+      <div class="card-title"><span class="icon">💰</span> Tổng quan tiền quyết toán</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="rev-box green" style="flex:1;min-width:150px;border:2px solid #16a34a"><div class="rev-label">Tổng thanh toán đã chuyển</div><div class="rev-value" id="spRvSettlement">0đ</div><div class="rev-pct" id="spRvSettlementPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:140px;"><div class="rev-label">Tổng tiền sản phẩm</div><div class="rev-value" id="spRvProduct">0đ</div><div class="rev-pct">100%</div></div>
+        <div class="rev-sign">+</div>
+        <div class="rev-box" style="flex:1;min-width:130px;"><div class="rev-label">Giảm giá & trợ giá</div><div class="rev-value" id="spRvDiscount">0đ</div><div class="rev-pct" id="spRvDiscountPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:130px;"><div class="rev-label">Tổng phí giao dịch</div><div class="rev-value" id="spRvFee">0đ</div><div class="rev-pct" id="spRvFeePct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box orange" style="flex:1;min-width:100px;"><div class="rev-label">Thuế</div><div class="rev-value" id="spRvTax">0đ</div><div class="rev-pct" id="spRvTaxPct">0%</div></div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Chi tiết phí -->
+    <div class="card" style="border-left:4px solid #dc2626;">
+      <div class="card-title"><span class="icon">📋</span> Chi tiết phí sàn</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="rev-box"><div class="rev-label">Phí cố định</div><div class="rev-value" id="spRvFeeFixed">0đ</div><div class="rev-pct" id="spRvFeeFixedPct">0%</div></div>
+        <div class="rev-box green-line"><div class="rev-label">Phí Dịch Vụ</div><div class="rev-value" id="spRvFeeService">0đ</div><div class="rev-pct" id="spRvFeeServicePct">0%</div></div>
+        <div class="rev-box red-line"><div class="rev-label">Phí xử lý giao dịch</div><div class="rev-value" id="spRvFeeProcess">0đ</div><div class="rev-pct" id="spRvFeeProcessPct">0%</div></div>
+        <div class="rev-box orange-line"><div class="rev-label">Phí hoa hồng TTLK</div><div class="rev-value" id="spRvFeeAff">0đ</div><div class="rev-pct" id="spRvFeeAffPct">0%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;">
+        <div class="rev-box purple-line"><div class="rev-label">Phí dịch vụ PiShip</div><div class="rev-value" id="spRvFeePiship">0đ</div><div class="rev-pct" id="spRvFeePishipPct">0%</div></div>
+        <div class="rev-box"><div class="rev-label">Phí vận chuyển (net)</div><div class="rev-value" id="spRvShipNet">0đ</div><div class="rev-pct" id="spRvShipNetPct">0%</div></div>
+        <div class="rev-box red-line"><div class="rev-label">Thuế GTGT</div><div class="rev-value" id="spRvTaxVAT">0đ</div><div class="rev-pct" id="spRvTaxVATPct">0%</div></div>
+        <div class="rev-box" style="border:1.5px solid #fbbf24;background:var(--yellow-bg);"><div class="rev-label">Thuế TNCN</div><div class="rev-value" style="color:var(--yellow);" id="spRvTaxPIT">0đ</div><div class="rev-pct" id="spRvTaxPITPct">0%</div></div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Thống kê Voucher & Hỗ trợ nền tảng -->
+    <div class="card" style="border-left:4px solid #f59e0b;">
+      <div class="card-title"><span class="icon">🎫</span> Thống kê Voucher & Hỗ trợ nền tảng</div>
+      <div class="grid-4" style="margin-bottom:12px">
+        <div class="result-box breakeven" style="border-left:3px solid #f59e0b"><div class="label">Tổng Tiền Voucher Nền Tảng</div><div class="value" id="spRvVcPlatform">0đ</div></div>
+        <div class="result-box breakeven" style="border-left:3px solid #3b82f6"><div class="label">Tổng Tiền Được Trợ Ship</div><div class="value" id="spRvVcShip">0đ</div></div>
+        <div class="result-box breakeven" style="border-left:3px solid #16a34a"><div class="label">Tổng Tiền Được Hỗ Trợ</div><div class="value" id="spRvVcTotal">0đ</div></div>
+        <div class="result-box info" style="border-left:3px solid #dc2626"><div class="label">Tỷ lệ tiền hỗ trợ / chi phí bỏ ra</div><div class="value" id="spRvVcRatio">0,00</div></div>
+      </div>
+      <div class="grid-4" style="margin-bottom:12px">
+        <div class="result-box info" style="border-left:3px solid #f59e0b"><div class="label">Số Đơn Có Voucher Shopee</div><div class="value" id="spRvVcOrdPlatform">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #8b5cf6"><div class="label">Số Đơn Sử dụng Mã Shop</div><div class="value" id="spRvVcOrdSeller">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #3b82f6"><div class="label">Số Đơn Được Trợ Ship</div><div class="value" id="spRvVcOrdShip">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #dc2626"><div class="label">Số Đơn Khách Trả Phí Ship</div><div class="value" id="spRvVcOrdPayShip">0</div></div>
+      </div>
+      <div class="grid-4">
+        <div class="result-box info" style="border-left:3px solid #16a34a"><div class="label">#voucher từ 0-20k</div><div class="value" id="spRvVcR0">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #3b82f6"><div class="label">#voucher từ 20-50k</div><div class="value" id="spRvVcR20">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #f59e0b"><div class="label">#voucher từ 50-100k</div><div class="value" id="spRvVcR50">0</div></div>
+        <div class="result-box info" style="border-left:3px solid #dc2626"><div class="label">#voucher &gt; 100k</div><div class="value" id="spRvVcR100">0</div></div>
+      </div>
+
+      <!-- Phân tích theo mức giá đơn hàng -->
+      <div style="margin-top:20px;">
+        <div style="font-size:0.95em;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);">📊 PHÂN TÍCH VOUCHER THEO MỨC GIÁ ĐƠN HÀNG</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="width:100%;font-size:0.88em;">
+            <thead>
+              <tr style="background:var(--bg-input);">
+                <th style="text-align:left;padding:10px 12px;">MỨC GIÁ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">% TỔNG</th>
+                <th style="text-align:right;padding:10px 12px;">AOV</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN CÓ VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">TỔNG VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">VOUCHER TB/ĐƠN</th>
+              </tr>
+            </thead>
+            <tbody id="spRvVcPriceRangeTable">
+              <tr><td colspan="7" class="text-center" style="padding:20px;color:var(--text-muted);">Chưa có dữ liệu</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Voucher phổ biến nhất -->
+      <div style="margin-top:20px;">
+        <div style="font-size:0.95em;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);">🏆 TOP VOUCHER PHỔ BIẾN NHẤT</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" style="width:100%;font-size:0.88em;">
+            <thead>
+              <tr style="background:var(--bg-input);">
+                <th style="text-align:left;padding:10px 12px;">GIÁ TRỊ VOUCHER</th>
+                <th style="text-align:right;padding:10px 12px;">SỐ ĐƠN</th>
+                <th style="text-align:right;padding:10px 12px;">% TỔNG</th>
+              </tr>
+            </thead>
+            <tbody id="spRvVcTopTable">
+              <tr><td colspan="3" class="text-center" style="padding:20px;color:var(--text-muted);">Chưa có dữ liệu</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: Lợi nhuận -->
+    <div class="card" style="border-left:4px solid #16a34a;">
+      <div class="card-title"><span class="icon">📊</span> Lợi nhuận</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="rev-box green" style="flex:1;min-width:150px;border:2px solid #16a34a"><div class="rev-label">Lợi nhuận trước thuế</div><div class="rev-value" id="spRvProfit">0đ</div><div class="rev-pct" id="spRvProfitPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:140px;"><div class="rev-label">Tổng thanh toán</div><div class="rev-value" id="spRvSettlement2">0đ</div><div class="rev-pct" id="spRvSettlement2Pct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box" style="flex:1;min-width:100px;border:1.5px solid #86efac;"><div class="rev-label">Tổng giá vốn</div><div class="rev-value" style="color:var(--green);" id="spRvCogs">0đ</div><div class="rev-pct" id="spRvCogsPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box orange" style="flex:1;min-width:100px;"><div class="rev-label">Chi phí quảng cáo</div><div class="rev-value" id="spRvAds">0đ</div><div class="rev-pct" id="spRvAdsPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box purple" style="flex:1;min-width:100px;"><div class="rev-label">Chi phí vận hành</div><div class="rev-value" id="spRvOps">0đ</div><div class="rev-pct" id="spRvOpsPct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:100px;"><div class="rev-label">Chi phí phụ</div><div class="rev-value" id="spRvExtra">0đ</div><div class="rev-pct" id="spRvExtraPct">0%</div></div>
+      </div>
+      <div style="font-size:0.88em;font-weight:600;color:var(--text-muted);margin-bottom:10px;">⚙️ Nhập chi phí biến động (VND):</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="form-group" style="margin:0"><label>Tổng giá vốn</label><input type="text" inputmode="numeric" id="spRvInputCogs" value="0" oninput="fmtMoneyInput(this);recalcShopeeRevenue()"></div>
+        <div class="form-group" style="margin:0"><label>Chi phí quảng cáo</label><input type="text" inputmode="numeric" id="spRvInputAds" value="0" oninput="fmtMoneyInput(this);recalcShopeeRevenue()"></div>
+        <div class="form-group" style="margin:0"><label>Chi phí vận hành</label><input type="text" inputmode="numeric" id="spRvInputOps" value="0" oninput="fmtMoneyInput(this);recalcShopeeRevenue()"></div>
+        <div class="form-group" style="margin:0"><label>Chi phí phụ</label><input type="text" inputmode="numeric" id="spRvInputExtra" value="0" oninput="fmtMoneyInput(this);recalcShopeeRevenue()"></div>
+      </div>
+    </div>
+
+    <!-- ROW 5: Lợi nhuận sau thuế -->
+    <div class="card" style="border-left:4px solid #7c3aed;">
+      <div class="card-title"><span class="icon">🏦</span> Lợi nhuận sau thuế cuối năm</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="rev-box green" style="flex:1;min-width:200px;border:2px solid #16a34a"><div class="rev-label">Lợi nhuận sau thuế</div><div class="rev-value" id="spRvNetProfit">0đ</div><div class="rev-pct" id="spRvNetProfitPct">0%</div></div>
+        <div class="rev-sign">=</div>
+        <div class="rev-box blue" style="flex:1;min-width:200px;"><div class="rev-label">Lợi nhuận trước thuế</div><div class="rev-value" id="spRvProfitBefore2">0đ</div><div class="rev-pct" id="spRvProfitBefore2Pct">0%</div></div>
+        <div class="rev-sign">−</div>
+        <div class="rev-box red" style="flex:1;min-width:200px;"><div class="rev-label">Thuế đóng cuối năm</div><div class="rev-value" id="spRvYearTax">0đ</div><div class="rev-pct" id="spRvYearTaxPct">0%</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:0.82em;color:var(--text-muted);font-style:italic;">⚠️ Thuế đóng cuối năm = 17% × Lợi nhuận trước thuế (Tạm tính)</div>
+    </div>
+
+    <!-- Tổng báo cáo kinh doanh (giống bên TikTok Shop) -->
+    <div class="card" id="spRvSummaryCard" style="border-left:4px solid #0ea5e9;display:none;">
+      <div class="card-title"><span class="icon">📑</span> Tổng báo cáo kinh doanh</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr style="background:linear-gradient(135deg,#fff7ed,#ffedd5);">
+              <th style="text-align:left;width:60%;">Hạng mục</th>
+              <th style="text-align:right;">Số tiền (VND)</th>
+              <th style="text-align:right;">Tỷ lệ / Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody id="spRvSummaryBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;text-align:center;">
+        <button class="btn btn-primary" onclick="exportShopeeRevenueReport()" style="padding:12px 32px;font-size:1em;">📥 Xuất báo cáo Excel</button>
+      </div>
+    </div>
+
+    </div><!-- end spRvPage-kd -->
+
+    <!-- SUB-TAB: Nhập giá vốn Shopee -->
+    <div class="rv-page" id="spRvPage-giavon">
+      <div class="card">
+        <div class="card-title"><span class="icon">📦</span> Nhập giá vốn sản phẩm</div>
+        <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+          <p style="font-size:0.88em;color:#1e40af;font-weight:600;margin:0;">📌 Danh sách sản phẩm được lấy tự động từ file đơn hàng Shopee. Bạn chỉ cần nhập giá vốn / SP → hệ thống tự tính tổng.</p>
+        </div>
+        <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #16a34a;border-radius:12px;margin-bottom:18px;">
+          <div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:4px;">TỔNG GIÁ VỐN</div>
+          <div style="font-size:2em;font-weight:900;color:#16a34a;font-family:'Montserrat',sans-serif;" id="spCogsGrandTotal">0đ</div>
+        </div>
+        <div style="display:flex;gap:0;margin-bottom:14px;border-bottom:2px solid var(--border);">
+          <button class="rv-tab active" onclick="switchSpCogsView('name')" id="spCogsViewTab-name">Theo tên sản phẩm</button>
+          <button class="rv-tab" onclick="switchSpCogsView('variant')" id="spCogsViewTab-variant">Theo phân loại</button>
+        </div>
+        <div id="spCogsView-name">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>STT</th><th>Tên sản phẩm</th><th class="text-right">SL bán</th><th class="text-right" style="min-width:140px;">Giá vốn / SP</th><th class="text-right">Tổng giá vốn</th></tr></thead>
+              <tbody id="spCogsTableByName"><tr><td colspan="5" class="text-center" style="color:var(--text-muted);padding:30px;">Chưa có dữ liệu — vui lòng upload file đơn hàng</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="spCogsView-variant" style="display:none;">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>STT</th><th>Tên sản phẩm</th><th>Phân loại</th><th class="text-right">SL bán</th><th class="text-right" style="min-width:140px;">Giá vốn / SP</th><th class="text-right">Tổng giá vốn</th></tr></thead>
+              <tbody id="spCogsTableByVariant"><tr><td colspan="6" class="text-center" style="color:var(--text-muted);padding:30px;">Chưa có dữ liệu</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- end spRvPage-giavon -->
+
+    <!-- SUB-TAB: Chi phí vận hành Shopee -->
+    <div class="rv-page" id="spRvPage-vanhanh">
+      <div class="card">
+        <div class="card-title"><span class="icon">⚙️</span> Chi phí vận hành</div>
+        <div style="background:linear-gradient(135deg,#fef3c7,#fffbeb);border:1.5px solid #fbbf24;border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+          <p style="font-size:0.88em;color:#92400e;font-weight:600;margin:0;">📌 Nhập các khoản chi phí vận hành của shop. Bạn có thể thêm hoặc xóa khoản chi phí tùy ý. Tổng sẽ tự động cập nhật sang tab "Kết quả kinh doanh".</p>
+        </div>
+        <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #d97706;border-radius:12px;margin-bottom:18px;">
+          <div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:4px;">TỔNG CHI PHÍ VẬN HÀNH</div>
+          <div style="font-size:2em;font-weight:900;color:#d97706;font-family:'Montserrat',sans-serif;" id="spOpsGrandTotal">0đ</div>
+        </div>
+        <div id="spOpsRows">
+          <div class="ops-row"><input type="text" class="ops-name" value="Lương nhân viên" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Lương bản thân" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Thuê nhà / kho" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền điện" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền nước" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Tiền internet" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Đóng gói / bao bì" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+          <div class="ops-row"><input type="text" class="ops-name" value="Chi phí khác" placeholder="Tên chi phí"><input type="text" inputmode="numeric" class="sp-ops-amount" value="0" placeholder="Số tiền" oninput="fmtMoneyInput(this);calcSpOps()"><button class="cost-row-remove" onclick="this.closest('.ops-row').remove();calcSpOps();">×</button></div>
+        </div>
+        <div class="cost-actions" style="margin-top:14px;">
+          <button class="btn btn-primary btn-sm" onclick="addSpOpsRow()">+ Thêm khoản vận hành</button>
+          <button class="btn btn-secondary btn-sm" onclick="clearSpOpsRows()">Xóa nhanh</button>
+        </div>
+      </div>
+    </div><!-- end spRvPage-vanhanh -->
+
+  </div>
+</div>
+</div>
+
+<!-- ===== PAGE: HƯỚNG DẪN SỬ DỤNG ===== -->
+<div class="page-content" id="page-huong-dan">
+<div class="content-wrap" style="max-width:960px">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📖</span> Hướng Dẫn Sử Dụng</div>
+    <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:10px;padding:16px 20px;margin-bottom:20px;">
+      <p style="font-size:0.95em;color:#1e40af;font-weight:600;margin:0;">📌 Xem video hướng dẫn bên dưới để biết cách sử dụng các tính năng: tính giá bán, thống kê đơn hàng, phân tích ADS GMV...</p>
+    </div>
+    <div style="margin-bottom:12px;font-size:1.05em;font-weight:700;color:#1e40af;">🎬 Video hướng dẫn sử dụng tool</div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.12);background:#000;">
+      <iframe id="ytPlayer" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
+      <!-- Ảnh chờ khi mở bằng file:// (lúc đó trình duyệt chặn nhúng video) -->
+      <a id="ytFallback" href="https://www.youtube.com/watch?v=7qrj0Kj_p4I" target="_blank" rel="noopener" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:url('https://img.youtube.com/vi/7qrj0Kj_p4I/maxresdefault.jpg') center/cover no-repeat;border-radius:12px;text-decoration:none;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+          <div style="width:72px;height:72px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+            <div style="width:0;height:0;border-left:28px solid #fff;border-top:16px solid transparent;border-bottom:16px solid transparent;margin-left:6px;"></div>
+          </div>
+          <div style="color:#fff;font-weight:700;font-size:1.1em;text-shadow:0 2px 8px rgba(0,0,0,0.5);background:rgba(0,0,0,0.6);padding:8px 20px;border-radius:8px;">▶ Xem video trên YouTube</div>
+        </div>
+      </a>
+    </div>
+    
+
+  </div>
+
+  <div class="app-footer">Hướng dẫn sử dụng &mdash; Dung Phát &bull; Hotline: 0393060017 &bull; Phiên bản 2.1.0 (09/05/2026)</div>
+</div>
+</div>
+
+<!-- pdf.js: dùng jsDelivr vì CSP (dòng 11) chỉ cho phép cdn.jsdelivr.net và cdn.sheetjs.com.
+     Trước đây tải từ cdnjs.cloudflare.com nên bị chặn -> lỗi "pdfjsLib is not defined". -->
+
+
+
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">⏳ Đang xử lý dữ liệu...</div>
+  <div class="loading-sub" id="loadingSub">Vui lòng chờ trong giây lát</div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+  <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+  <img id="lightboxImg" src="" alt="Preview">
+</div>
+<script>
+  (function(){
+    var yt = document.getElementById('ytPlayer');
+    if (yt) yt.src = 'https://www.youtube.com/embed/7qrj0Kj_p4I';
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="/js/commission-tiktok.js"></script>
+<script src="/js/commission-shopee.js"></script>
+<script src="/js/hadaplus-main.js"></script>
+</body>
+</html>

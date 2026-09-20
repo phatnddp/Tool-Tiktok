@@ -1,0 +1,6 @@
+{
+  "name": "Dung Phát Tool - Tính Toán Chi Phí TikTok Shop & Shopee",
+  "description": "Công cụ toàn diện tính toán chi phí, phân tích đơn hàng, GMV MAX, ROI hoàn huỷ và báo cáo tài chính cho nhà bán hàng TikTok Shop & Shopee.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
